@@ -7,3 +7,4 @@
       group: sapsys
       owner: "{{ lookup('ini', 'sid section=SAP file={{ ansible_env.HOME }}/.config/sap_config.ini')|lower }}adm"
       force: yes
+    become: yes
