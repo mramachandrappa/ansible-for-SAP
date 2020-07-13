@@ -3,7 +3,7 @@
   - name: Insert Command
     sap_function_call:
       ZSXPG_COMMAND_INSERT:
-        NAME: 'ZTABEXP'
+        NAME: 'ZTABIMP'
         OPSYSTEM: 'Linux'
         OPCOMMAND: 'R3trans'
         PARAMETERS: '-w /tmp/import_ecc.log /tmp/import.ctl'
@@ -14,7 +14,7 @@
   - name: Execute Command
     sap_function_call:
       SXPG_COMMAND_EXECUTE:
-        NAME: "ZTABEXP"
+        NAME: "ZTABIMP"
     register: comm_execute
 
   - debug: var=comm_execute
