@@ -1,6 +1,6 @@
 ---
 # tasks file for copy_exp_ctl
-  - name: copy exp.ctl file
+  - name: copy import.ctl file
     template:
       src: import.ctl
       dest: /tmp/import.ctl
