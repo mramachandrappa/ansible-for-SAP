@@ -9,4 +9,5 @@
         variant_name: "Z_PRDTOQA"
         source_client: "{{ lookup('ini', 'source_client section=SAP file={{ ansible_env.HOME }}/.config/sap_config.ini') }}"
         source_sid: "{{ lookup('ini', 'source_sid section=SAP file={{ ansible_env.HOME }}/.config/sap_config.ini') }}"
-
+        client: "{{ lookup('ini', 'client section=SAP file={{ ansible_env.HOME }}/.config/sap_config.ini') }}"
+        sid: "{{ lookup('ini', 'sid section=SAP file={{ ansible_env.HOME }}/.config/sap_config.ini') }}"
