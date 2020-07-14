@@ -2,23 +2,6 @@
   vars:
      ansible_connection: local
      ansible_python_interpreter: /usr/bin/python3
-  vars_prompt:
-    - name: prod_client
-      prompt: "Enter production client no\n"
-      private: no
-
-    - name: prod_sid
-      prompt: "Enter production sid no\n"
-      private: no
-
-    - name: P_CNT
-      prompt: "Enter P_CNT value\n"
-      private: no
-
-    - name: P_PROC
-      prompt: "Enter P_PROC value\n"
-      private: no
-
   roles:
     - role: logical_system_conversion
       vars:
@@ -26,7 +9,7 @@
         variant_name: "Z_PRDTOQA"
         source_client: "{{ lookup('ini', 'source_client section=SAP file={{ ansible_env.HOME }}/.config/sap_config.ini') }}"
         source_sid: "{{ lookup('ini', 'source_sid section=SAP file={{ ansible_env.HOME }}/.config/sap_config.ini') }}"
-        P_CNT: {{ P_CNT }}
-        P_PROC: {{ P_PROC }}
+        P_CNT: {{ P_CNT | default(10.000.000)}}
+        P_PROC: {{ P_PROC | default(5)}}
 
 
