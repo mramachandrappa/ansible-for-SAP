@@ -9,7 +9,4 @@
         variant_name: "Z_PRDTOQA"
         source_client: "{{ lookup('ini', 'source_client section=SAP file={{ ansible_env.HOME }}/.config/sap_config.ini') }}"
         source_sid: "{{ lookup('ini', 'source_sid section=SAP file={{ ansible_env.HOME }}/.config/sap_config.ini') }}"
-        P_CNT: {{ P_CNT | default(10.000.000)}}
-        P_PROC: {{ P_PROC | default(5)}}
-
 
