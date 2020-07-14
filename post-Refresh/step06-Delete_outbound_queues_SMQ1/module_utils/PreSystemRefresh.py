@@ -293,7 +293,7 @@ class PreSystemRefresh:
                 logging.info("CHECK VARIANT: variant {} for report {} is already exist!".format(variant_name, report))
                 module.exit_json(changed=True, meta=self.data)
 
-        for cont in var_content:  # User Master Export
+        for cont in var_content:  # User Master Export & Import
             if cont['SELNAME'] == 'COPYCLI' and cont['LOW'] == self.creds['client']:
                 self.data['stdout'] = True
                 logging.info("CHECK VARIANT: variant {} for report {} is already exist!".format(variant_name, report))
@@ -313,6 +313,12 @@ class PreSystemRefresh:
 
         for cont in var_content:  # Delete_outbound_queues_SMQ2
             if cont['SELNAME'] == 'SET_EXEC' and cont['LOW'] == 'X':
+                self.data['stdout'] = True
+                logging.info("CHECK VARIANT: variant {} for report {} is already exist!".format(variant_name, report))
+                module.exit_json(changed=True, meta=self.data)
+
+        for cont in var_content:  # BDLS_Logical_system_conversion
+            if cont['SELNAME'] == 'P_TAB' and cont['LOW'] == '*':
                 self.data['stdout'] = True
                 logging.info("CHECK VARIANT: variant {} for report {} is already exist!".format(variant_name, report))
                 module.exit_json(changed=True, meta=self.data)
