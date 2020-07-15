@@ -12,7 +12,7 @@ class PreSystemRefresh:
     data = dict()
     err = str()
 
-    def __init__(self):
+    def __init__(self, module):
         self.config = ConfigParser()
         try:
             self.config.read(os.environ["HOME"] + '/.config/sap_config.ini')
@@ -35,6 +35,8 @@ class PreSystemRefresh:
 
         except Exception as e:
             logging.error("CONNECTION: Failed to connect to SAP. Please check the creds: {}".format(e))
+            self.err = "Failed to connect to SAP. Please check the creds"
+            module.fail_json(msg=self.err, error=to_native(e), exception=traceback.format_exc())
 
     def users_list(self, module):
         users = []
