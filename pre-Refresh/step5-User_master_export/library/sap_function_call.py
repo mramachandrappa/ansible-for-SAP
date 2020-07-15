@@ -134,7 +134,7 @@ EXAMPLES = r'''
     BAPI_USER_LOCK:
         EXCEPTION_USERS: "['MRAM', 'GIRIDR']"
         ALL_USERS: "{{ users.meta.USERS }}"
-
+        
 #INST_EXECUTE_REPORT
 - name: Executes the SAP program.
   sap_function_call:
@@ -202,7 +202,7 @@ def main():
     if module.check_mode:
         module.exit_json({"Mes": "CheckMode is not supported as of now!"})
 
-    prefresh = PreSystemRefresh()
+    prefresh = PreSystemRefresh(module)
 
     if module.params['FETCH']:
         params = module.params['FETCH']

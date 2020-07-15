@@ -205,8 +205,8 @@ def main():
     if module.check_mode:
         module.exit_json({"Mes": "CheckMode is not supported as of now!"})
 
-    prefresh = PreSystemRefresh()
-    postRefresh = PostSystemRefresh()
+    prefresh = PreSystemRefresh(module)
+    postRefresh = PostSystemRefresh(module)
 
     if module.params['FETCH']:
         params = module.params['FETCH']
