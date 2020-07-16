@@ -1,12 +1,11 @@
 ---
- - hosts: all
+ - hosts: sap
    vars:
      ansible_user: "{{ remote_ssh_user }}"
-     ansible_python_interpreter: /usr/bin/python3
    roles:
      - role: target-setup-vars
 
- - hosts: all
+ - hosts: localhost
    vars:
      ansible_connection: local
      ansible_python_interpreter: /usr/bin/python3
