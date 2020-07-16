@@ -5,9 +5,29 @@
      ansible_python_interpreter: /usr/bin/python3
    roles:
      - role: setup-vars
+       vars:
+         target_sap_user: "MRAM"
+         target_sap_passwd: "Sap@123"
+         target_sap_hostname: "sstsap06"
+         target_sap_sysnr: "01"
+         target_sap_sid: "PC3"
+         target_sap_client: "100"
+         target_sap_ip_addr: "52.207.1.100"
+         source_sap_sid: "PC3"
+         source_sap_client: "100"
+         remote_ssh_user: "ec2-user"
+         exception_list: "['MRAM', 'GIRIDR', 'DDIC']"
+         systemdb_backup_path: "/tmp/systemdb"
+         tenantdb_backup_path: "/tmp/tenantdb"
 
  - hosts: sap
    vars:
      ansible_user: "{{ remote_ssh_user }}"
    roles:
      - role: target-setup-vars
+       vars:
+         target_sap_sid: "PC3"
+         target_sap_client: "100"
+         remote_ssh_user: "ec2-user"
+         systemdb_backup_path: "/tmp/systemdb"
+         tenantdb_backup_path: "/tmp/tenantdb"
