@@ -91,7 +91,7 @@ def main():
     variant_name = module.params['variant_name']
     action = module.params['action']
 
-    prefresh = PreSystemRefresh()
+    prefresh = PreSystemRefresh(module)
 
     if action == "create":
         prefresh.create_variant(module, report, variant_name, desc, content, text, screen)
