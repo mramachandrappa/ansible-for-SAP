@@ -1,5 +1,0 @@
----
-# handlers file for user_master_export
- - name: Delete variant
-   command: python3 /root/ansible-for-SAP/command_module/library/variant.py delete
-
