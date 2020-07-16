@@ -1,0 +1,2 @@
+[sap]
+"{{ lookup('ini', 'ashost section=SAP file={{ ansible_env.HOME }}/.config/sap_config.ini') }}"
