@@ -1,4 +1,6 @@
 - hosts: sap
+  vars:
+    ansible_user: "{{ lookup('ini','remote_ssh_user section=SAP file={{ filepath }}') }}"
   roles:
     - role: copy_exp_ctl
 
