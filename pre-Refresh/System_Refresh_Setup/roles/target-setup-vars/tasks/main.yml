@@ -1,0 +1,18 @@
+---
+# tasks file for target-setup-vars
+ - name: Create $HOME/.config directory if doesn't exist
+   file:
+     path: "{{ ansible_env.HOME }}/.config"
+     state: directory
+     mode: '0755'
+ 
+ - name: Delete existing sap_config.ini configuration file
+   file:
+     dest: "{{ ansible_env.HOME }}/.config/sap_config.ini"
+     state: absent
+
+ - name: Create configuration file sap_config.ini in $HOME/.config/
+   template:
+     src: sap_config.ini
+     dest: "{{ ansible_env.HOME }}/.config/sap_config.ini"
+     force: yes

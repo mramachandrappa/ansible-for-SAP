@@ -1,12 +1,17 @@
 ---
-# tasks file for system_user_lock
- - name: Create .config directory if it does not exist
+# tasks file for setup-vars
+ - name: Create $HOME/.config directory if doesn't exist
    file:
      path: "{{ ansible_env.HOME }}/.config"
      state: directory
      mode: '0755'
+ 
+ - name: Delete existing sap_config.ini configuration file
+   file:
+     dest: "{{ ansible_env.HOME }}/.config/sap_config.ini"
+     state: absent
 
- - name: Create sap_config.cnf file in $HOME/.config/sap_config.cnf
+ - name: Create configuration file sap_config.ini in $HOME/.config/
    template:
      src: sap_config.ini
      dest: "{{ ansible_env.HOME }}/.config/sap_config.ini"
@@ -27,4 +32,20 @@
      line: "{{ lookup('ini', 'target_ip_addr section=SAP file={{ ansible_env.HOME }}/.config/sap_config.ini') }}\t{{ lookup('ini', 'ashost section=SAP file={{ ansible_env.HOME }}/.config/sap_config.ini') }}"
      state: present
    when: ansible_facts['distribution'] != "Windows"
+   become: yes
    tags: hostupdate
+
+ - name: Check connection
+   command: "{{ ansible_python_interpreter }} {{ playbook_dir }}/connection.py"
+   register: conn
+
+ - debug:
+     msg: "Connection is Successful"
+   when: conn.stdout == "True"
+
+ - debug:
+     msg: "Failed to establish connection to SAP: {{ conn.stdout_lines }}"
+   when: conn.stdout != "True"
+
+
+
