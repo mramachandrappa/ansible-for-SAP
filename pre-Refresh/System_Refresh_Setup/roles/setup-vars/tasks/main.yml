@@ -41,9 +41,9 @@
      dest: "{{ item }}"
      force: yes
    with_items:
-   - "{{ playbook_dir }}/../step3-Export_sys_tables/hosts"
-   - "{{ playbook_dir }}/../../post-Refresh/step04-Import_sys_tables/hosts"
-   - "{{ playbook_dir }}/hosts
+      - "{{ playbook_dir }}/../step3-Export_sys_tables/hosts"
+      - "{{ playbook_dir }}/../../post-Refresh/step04-Import_sys_tables/hosts"
+      - "{{ playbook_dir }}/hosts"
 
  - name: Check connection
    command: "{{ ansible_python_interpreter }} {{ playbook_dir }}/connection.py"
