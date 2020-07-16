@@ -1,0 +1,29 @@
+---
+# tasks file for backup_restore
+  - name: copy systemdb_restore.sh
+    template:
+      src: systemdb_restore.sh
+      dest: /tmp/systemdb_restore.sh
+      group: sapsys
+      owner: "{{ lookup('ini', 'sid section=SAP file={{ ansible_env.HOME }}/.config/sap_config.ini')|lower }}adm"
+      force: yes
+    become: yes
+
+  - name: copy tenantdb_restore.sh
+    template:
+      src: tenantdb_restore.sh
+      dest: /tmp/tenantdb_restore.sh
+      group: sapsys
+      owner: "{{ lookup('ini', 'sid section=SAP file={{ ansible_env.HOME }}/.config/sap_config.ini')|lower }}adm"
+      force: yes
+    become: yes
+
+#  - name: Run systemdb backup script
+#    command: /tmp/systemdb_restore.sh
+#    become: yes
+#    become_user: "{{ lookup('ini', 'sid section=SAP file={{ ansible_env.HOME }}/.config/sap_config.ini')|lower }}adm"
+#
+#  - name: Run tenantdb backup script
+#    command: /tmp/tenantdb_restore.sh
+#    become: yes
+#    become_user: "{{ lookup('ini', 'sid section=SAP file={{ ansible_env.HOME }}/.config/sap_config.ini')|lower }}adm"
