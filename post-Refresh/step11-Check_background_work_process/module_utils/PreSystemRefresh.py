@@ -42,16 +42,20 @@ class PreSystemRefresh:
         users = []
         try:
             tables = self.conn.call("RFC_READ_TABLE", QUERY_TABLE='USR02', FIELDS=[{'FIELDNAME': 'BNAME'}])
+
             for data in tables['DATA']:
                 for names in data.values():
                     users.append(names)
+
             self.data['USERS'] = users
             self.data['stdout'] = True
+
             logging.info("USERS_LIST: Successfully fetched user list from USR02 table!")
             module.exit_json(changed=True, meta=self.data)
         except Exception as e:
             logging.error("Failed to fetch user's list from USR02 table: {}".format(e))
             self.err = "USERS_LIST: Failed to fetch user's list from USR02 table: {}".format(e)
+
             module.fail_json(msg=self.err, error=to_native(e), exception=traceback.format_exc())
 
     def existing_locked_users(self, module):
@@ -71,20 +75,21 @@ class PreSystemRefresh:
 
             self.data['EXISTING_LOCKED_USERS'] = locked_user_list
             self.data['stdout'] = True
+
             logging.info("EXISTING_LOCKED_USERS: Successfully fetched existing locked user list!")
             module.exit_json(changed=True, meta=self.data)
         except Exception as e:
             logging.error("EXISTING_LOCKED_USERS: Failed to get existing locked user list: {}".format(e))
+
             self.err = "Failed to get existing locked user list: {}".format(e)
             module.fail_json(msg=self.err, error=to_native(e), exception=traceback.format_exc())
 
     def bapi_user_lock(self, module, params):
-        users_list = params['ALL_USERS']
         users_locked = []
         errors = dict()
         users_exempted = []
-        if users_list:
-            for user in users_list:
+        if params['ALL_USERS']:
+            for user in params['ALL_USERS']:
                 if user not in params['EXCEPTION_USERS']:
                     try:
                         self.conn.call('BAPI_USER_LOCK', USERNAME=user)
@@ -111,12 +116,11 @@ class PreSystemRefresh:
         module.exit_json(changed=True, meta=self.data)
 
     def bapi_user_unlock(self, module, params):
-        users_list = params['ALL_USERS']
         users_locked = []
-        errors = dict()
         users_exempted = []
-        if users_list:
-            for user in users_list:
+        errors = dict()
+        if params['ALL_USERS']:
+            for user in params['ALL_USERS']:
                 if user not in params['EXCEPTION_USERS']:
                     try:
                         self.conn.call('BAPI_USER_UNLOCK', USERNAME=user)
@@ -128,6 +132,7 @@ class PreSystemRefresh:
                     users_exempted.append(user)
         else:
             self.err = "Failed to get entire user list before unlocking the users"
+
             logging.error("BAPI_USER_UNLOCK: Failed to get entire user list before unlocking the users")
             module.fail_json(msg=self.err, error=to_native(e), exception=traceback.format_exc())
 
@@ -145,34 +150,42 @@ class PreSystemRefresh:
     def inst_execute_report(self, module, params):
         try:
             self.conn.call("INST_EXECUTE_REPORT", PROGRAM=params['PROGRAM'])
+
             if params['PROGRAM'] == 'BTCTRNS1':
                 self.data["Success"] = "Background Jobs are Suspended!"
                 logging.info("INST_EXECUTE_REPORT: Background Jobs are Suspended!")
+
             module.exit_json(changed=True, meta=self.data)
         except Exception as e:
             if params['PROGRAM'] == 'BTCTRNS1':
                 self.err = "Failed to Suspend Background Jobs".format(e)
                 logging.error("INST_EXECUTE_REPORT: Failed to Suspend Background Jobs: {}".format(e))
+
             module.fail_json(msg=self.err, error=to_native(e), exception=traceback.format_exc())
 
     def start_report_in_batch(self, module, params):
         try:
             self.conn.call("SUBST_START_REPORT_IN_BATCH", IV_JOBNAME=params['IV_JOBNAME'],
                            IV_REPNAME=params['IV_REPNAME'], IV_VARNAME=params['IV_VARNAME'])
+
             if params['IV_REPNAME'] == 'RSPOXDEV':
                 self.data['Success'] = "Printer devices are Successfully exported!"
                 logging.info("SUBST_START_REPORT_IN_BATCH: Printer devices are Successfully exported!")
+
             if params['IV_REPNAME'] == 'ZRSCLXCOP':
                 self.data['Success'] = "User Master Export is Successfully Completed!"
                 logging.info("SUBST_START_REPORT_IN_BATCH: User Master Export is Successfully Completed!")
+
             module.exit_json(changed=True, meta=self.data)
         except Exception as e:
             if params['IV_REPNAME'] == 'RSPOXDEV':
                 self.err = "Failed to Export Printer devices".format(e)
                 logging.error("SUBST_START_REPORT_IN_BATCH: Failed to Export Printer devices".format(e))
+
             if params['IV_REPNAME'] == 'ZRSCLXCOP':
                 self.err = "User Master Export is Failed!".format(e)
                 logging.error("SUBST_START_REPORT_IN_BATCH: User Master Export is Failed!".format(e))
+
             module.fail_json(msg=self.err, Error=to_native(e), exception=traceback.format_exc())
 
     def command_insert(self, module, params):
@@ -185,24 +198,30 @@ class PreSystemRefresh:
 
         try:
             self.conn.call("ZSXPG_COMMAND_INSERT", COMMAND=args)
+
             self.data["Success!"] = "Successfully inserted command {}".format(params['NAME'])
             logging.info("ZSXPG_COMMAND_INSERT: Successfully inserted command {}".format(params['NAME']))
+
             module.exit_json(changed=True, meta=self.data)
         except Exception as e:
             self.err = "Failed to insert command {}".format(params['NAME'])
             logging.error("ZSXPG_COMMAND_INSERT: Failed to insert command {}".format(params['NAME']))
+
             module.fail_json(msg=self.err, error=to_native(e), exception=traceback.format_exc())
 
     def command_execute(self, module, params):
         try:
             self.conn.call("SXPG_COMMAND_EXECUTE", COMMANDNAME=params['NAME'])
+
             self.data["Success!"] = "Successfully Executed command {} and exported system tables".format(params['NAME'])
             logging.info("SXPG_COMMAND_EXECUTE: Successfully Executed command {} and exported system tables".format(
                 params['NAME']))
+
             module.exit_json(changed=True, meta=self.data)
         except Exception as e:
             self.err = "Failed to Execute command {}".format(params['NAME'])
             logging.error("SXPG_COMMAND_EXECUTE:  Failed to Execute command {}".format(params['NAME']))
+
             module.fail_json(msg=self.err, error=to_native(e), exception=traceback.format_exc())
 
     def fetch(self, module, params):
@@ -213,6 +232,7 @@ class PreSystemRefresh:
             except Exception as e:
                 self.err = "Failed to get data from E070L Table: {}".format(e)
                 logging.error("FETCH: Failed to get data from E070L Table: {}".format(e))
+
                 module.fail_json(msg=self.err, error=to_native(e), exception=traceback.format_exc())
 
             result = dict()
@@ -228,6 +248,7 @@ class PreSystemRefresh:
             except Exception as e:
                 self.err = "Failed to query E070L Table: {}".format(e)
                 logging.error("FETCH: Failed to query E070L Table: {}".format(e))
+
                 module.fail_json(msg=self.err, error=to_native(e), exception=traceback.format_exc())
 
             trans = []
@@ -244,6 +265,7 @@ class PreSystemRefresh:
             except Exception as e:
                 self.err = "Failed to query Table 'TMSPCONF': {}".format(e)
                 logging.error("FETCH: Failed to qyery Table 'TMSPCONF': {}".format(e))
+
                 module.fail_json(msg=self.err, error=to_native(e), exception=traceback.format_exc())
 
             ctc = None
@@ -273,6 +295,7 @@ class PreSystemRefresh:
             else:
                 logging.error("FETCH: trans_val or ctc is found None!")
                 self.err = "Failed to fetch {}".format(params['sys_params'])
+
                 module.fail_json(msg=self.err, error=to_native(), exception=traceback.format_exc())
 
     def check_variant(self, module, report, variant_name):
@@ -281,6 +304,7 @@ class PreSystemRefresh:
         except Exception as e:
             self.err = "Failed while checking variant existance {}: {}".format(variant_name, e)
             logging.error("CHECK VARIANT: Failed while checking variant existance {}: {}".format(variant_name, e))
+
             module.fail_json(msg=self.err, error=to_native(), exception=traceback.format_exc())
 
         var_content = []
@@ -327,32 +351,41 @@ class PreSystemRefresh:
 
         self.data['stdout'] = False
         self.data['mes'] = "variant {} for report {} doesn't exist!".format(variant_name, report)
+
         logging.info("CHECK VARIANT: variant {} for report {} doesn't exist!".format(variant_name, report))
+
         module.exit_json(changed=False, meta=self.data)
 
     def create_variant(self, module, report, variant_name, desc, content, text, screen):
         try:
             self.conn.call("RS_CREATE_VARIANT_RFC", CURR_REPORT=report, CURR_VARIANT=variant_name, VARI_DESC=desc,
                            VARI_CONTENTS=content, VARI_TEXT=text, VSCREENS=screen)
+
             self.data['Success'] = "Successfully Created variant {} for report {}".format(variant_name, report)
             self.data['stdout'] = True
+
             logging.info("CREATE VARIANT: Created variant {} for report {}".format(variant_name, report))
+
             module.exit_json(changed=True, meta=self.data)
         except Exception as e:
             self.err = "CREATE VARIANT: Failed to create variant {} for report {} : {}".format(variant_name, report, e)
             logging.error("CREATE VARIANT: Failed to create variant {} for report {} : {}".format(variant_name, report, e))
+
             module.fail_json(msg=self.err, error=to_native(e), exception=traceback.format_exc())
 
     def delete_variant(self, module, report, variant_name):
         try:
             self.conn.call("RS_VARIANT_DELETE_RFC", REPORT=report, VARIANT=variant_name)
+
             self.data['Success'] = "Successfully Deleted variant {} for report {}".format(variant_name, report)
             self.data['stdout'] = True
+
             logging.info("DELETE VARIANT: Deleted variant {} for report {}".format(variant_name, report))
             module.exit_json(changed=True, meta=self.data)
         except Exception as e:
             self.err = "Failed to delete variant {} for report {}: {}".format(variant_name, report, e)
             logging.error("DELETE VARIANT: Failed to delete variant {} for report {}: {}".format(variant_name, report, e))
+
             module.fail_json(msg=self.err, error=to_native(e), exception=traceback.format_exc())
 
 
