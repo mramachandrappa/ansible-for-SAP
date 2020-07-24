@@ -7,6 +7,8 @@ from ansible.module_utils.basic import *
 import os
 import logging
 
+os.chdir('../../')
+
 
 class PreSystemRefresh:
     data = dict()
@@ -15,19 +17,19 @@ class PreSystemRefresh:
     def __init__(self, module):
         self.config = ConfigParser()
         try:
-            self.config.read(os.environ["HOME"] + '/.config/sap_config.ini')
+            self.config.read(os.getcwd() + '/sap_config.ini')
             self.creds = self.config['SAP']
 
-            logging.basicConfig(filename="/tmp/system_refresh.log", level=logging.INFO,
+            logging.basicConfig(filename=os.getcwd() + "/system_refresh.log", level=logging.INFO,
                                 format='[%(asctime)s]: [%(levelname)s]: [%(message)s]')
 
             self.conn = Connection(user=self.creds['user'], passwd=self.creds['passwd'], ashost=self.creds['ashost'],
                                    sysnr=self.creds['sysnr'], sid=self.creds['sid'], client=self.creds['client'])
         except KeyError:
-            self.config.read(os.path.expanduser('~') + '\.config\sap_config.ini')
+            self.config.read(os.getcwd() + '/sap_config.ini')
             self.creds = self.config['SAP']
 
-            logging.basicConfig(filename=os.path.expanduser('~') + '\system_refresh.log', level=logging.INFO,
+            logging.basicConfig(filename=os.getcwd() + "/system_refresh.log", level=logging.INFO,
                                 format='[%(asctime)s]: [%(levelname)s]: [%(message)s]')
 
             self.conn = Connection(user=self.creds['user'], passwd=self.creds['passwd'], ashost=self.creds['ashost'],
@@ -387,5 +389,3 @@ class PreSystemRefresh:
             logging.error("DELETE VARIANT: Failed to delete variant {} for report {}: {}".format(variant_name, report, e))
 
             module.fail_json(msg=self.err, error=to_native(e), exception=traceback.format_exc())
-
-

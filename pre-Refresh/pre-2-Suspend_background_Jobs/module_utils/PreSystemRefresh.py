@@ -7,7 +7,7 @@ from ansible.module_utils.basic import *
 import os
 import logging
 
-os.chdir('../../../')
+os.chdir('../../')
 
 
 class PreSystemRefresh:
