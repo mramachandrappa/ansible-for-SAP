@@ -4,7 +4,6 @@ import os
 
 os.chdir('../')
 
-
 def main():
     config = ConfigParser()
     try:

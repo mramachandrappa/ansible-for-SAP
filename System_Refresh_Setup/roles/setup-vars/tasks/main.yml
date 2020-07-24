@@ -1,6 +1,6 @@
 ---
 # tasks file for setup-vars
- - name: Create working directory $HOME/system_refresh/$SID
+ - name: Create working directory $HOME/system_refresh/$SID/.config
    file:
      path: "{{ working_dir }}"
      state: directory
@@ -9,10 +9,10 @@
  - name: clone ansible repo of System Refresh activities
    git:
      repo: git@github.com:mramachandrappa/ansible-for-SAP.git
-     dest: "{{ working_dir }}"
+     dest: "{{ working_dir }}/../"
      version: cloudbolt/ansible-system-refresh
 
- - name: Create configuration file sap_config.ini in $HOME/system_refresh/$SID
+ - name: Create configuration file sap_config.ini in $HOME/system_refresh/$SID/.config
    template:
      src: sap_config.ini
      dest: "{{ config_file_path }}"
@@ -21,8 +21,8 @@
  - name: Adding an entry in /etc/hosts
    win_hosts:
      state: present
-     canonical_name: "{{ lookup('ini', 'ashost section=SAP file={{ config_file_path }}') }}"
-     ip_address: "{{ lookup('ini', 'target_ip_addr section=SAP file={{ config_file_path }}') }}"
+     canonical_name: "{{ lookup('ini', 'ashost section=SAP file={{ config_file_path }}/sap_config.ini') }}"
+     ip_address: "{{ lookup('ini', 'target_ip_addr section=SAP file={{ config_file_path }}/sap_config.ini') }}"
    when: ansible_facts['distribution'] == "Windows"
    tags: hostupdate
 
@@ -35,14 +35,14 @@
    when: ansible_facts['distribution'] != "Windows"
    become: yes
 
- - name: Check connection
-   command: "{{ ansible_python_interpreter }} {{ playbook_dir }}/connection.py"
-   register: conn
-
- - debug:
-     msg: "Connection is Successful"
-   when: conn.stdout == "True"
-
- - debug:
-     msg: "Failed to establish connection to SAP: {{ conn.stdout_lines }}"
-   when: conn.stdout != "True"
+# - name: Check connection
+#   command: "{{ ansible_python_interpreter }} {{ playbook_dir }}/connection.py"
+#   register: conn
+#
+# - debug:
+#     msg: "Connection is Successful"
+#   when: conn.stdout == "True"
+#
+# - debug:
+#     msg: "Failed to establish connection to SAP: {{ conn.stdout_lines }}"
+#   when: conn.stdout != "True"
