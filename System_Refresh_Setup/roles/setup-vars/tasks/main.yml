@@ -9,7 +9,7 @@
  - name: clone ansible repo of System Refresh activities
    git:
      repo: git@github.com:mramachandrappa/ansible-for-SAP.git
-     dest: "{{ working_dir }}"
+     dest: "{{ working_dir }}/../"
      version: cloudbolt/ansible-system-refresh
 
 
