@@ -1,6 +1,6 @@
 ---
 # tasks file for setup-vars
- - name: Create working directory as per SID
+ - name: Create working directory $HOME/system_refresh/$SID
    file:
      path: "{{ working_dir }}"
      state: directory
@@ -12,7 +12,7 @@
      dest: "{{ working_dir }}"
      version: cloudbolt/ansible-system-refresh
 
- - name: Create configuration file sap_config.ini in $HOME/.config/
+ - name: Create configuration file sap_config.ini in $HOME/system_refresh/$SID
    template:
      src: sap_config.ini
      dest: "{{ config_file_path }}"
@@ -35,14 +35,14 @@
    when: ansible_facts['distribution'] != "Windows"
    become: yes
 
-# - name: Check connection
-#   command: "{{ ansible_python_interpreter }} {{ playbook_dir }}/connection.py"
-#   register: conn
-#
-# - debug:
-#     msg: "Connection is Successful"
-#   when: conn.stdout == "True"
-#
-# - debug:
-#     msg: "Failed to establish connection to SAP: {{ conn.stdout_lines }}"
-#   when: conn.stdout != "True"
+ - name: Check connection
+   command: "{{ ansible_python_interpreter }} {{ playbook_dir }}/connection.py"
+   register: conn
+
+ - debug:
+     msg: "Connection is Successful"
+   when: conn.stdout == "True"
+
+ - debug:
+     msg: "Failed to establish connection to SAP: {{ conn.stdout_lines }}"
+   when: conn.stdout != "True"
