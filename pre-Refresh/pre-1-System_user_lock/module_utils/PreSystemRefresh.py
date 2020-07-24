@@ -20,7 +20,7 @@ class PreSystemRefresh:
             self.config.read(os.getcwd() + '/.config/sap_config.ini')
             self.creds = self.config['SAP']
 
-            logging.basicConfig(filename=os.getcwd() + "/system_refresh.log", level=logging.INFO,
+            logging.basicConfig(filename="/tmp/{}_system_refresh.log".format(self.creds['sid']), level=logging.INFO,
                                 format='[%(asctime)s]: [%(levelname)s]: [%(message)s]')
 
             self.conn = Connection(user=self.creds['user'], passwd=self.creds['passwd'], ashost=self.creds['ashost'],
@@ -29,8 +29,8 @@ class PreSystemRefresh:
             self.config.read(os.getcwd() + '/.config/sap_config.ini')
             self.creds = self.config['SAP']
 
-            logging.basicConfig(filename=os.getcwd() + "/system_refresh.log", level=logging.INFO,
-                                format='[%(asctime)s]: [%(levelname)s]: [%(message)s]')
+            logging.basicConfig(filename=os.path.expanduser('~') + "\{}_system_refresh.log".format(self.creds['sid']),
+                                level=logging.INFO, format='[%(asctime)s]: [%(levelname)s]: [%(message)s]')
 
             self.conn = Connection(user=self.creds['user'], passwd=self.creds['passwd'], ashost=self.creds['ashost'],
                                    sysnr=self.creds['sysnr'], sid=self.creds['sid'], client=self.creds['client'])
