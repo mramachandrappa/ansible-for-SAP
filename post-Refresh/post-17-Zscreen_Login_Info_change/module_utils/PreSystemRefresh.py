@@ -17,7 +17,7 @@ class PreSystemRefresh:
     def __init__(self, module):
         self.config = ConfigParser()
         try:
-            self.config.read(os.getcwd() + '/sap_config.ini')
+            self.config.read(os.getcwd() + '/.config/sap_config.ini')
             self.creds = self.config['SAP']
 
             logging.basicConfig(filename=os.getcwd() + "/system_refresh.log", level=logging.INFO,
@@ -26,7 +26,7 @@ class PreSystemRefresh:
             self.conn = Connection(user=self.creds['user'], passwd=self.creds['passwd'], ashost=self.creds['ashost'],
                                    sysnr=self.creds['sysnr'], sid=self.creds['sid'], client=self.creds['client'])
         except KeyError:
-            self.config.read(os.getcwd() + '/sap_config.ini')
+            self.config.read(os.getcwd() + '/.config/sap_config.ini')
             self.creds = self.config['SAP']
 
             logging.basicConfig(filename=os.getcwd() + "/system_refresh.log", level=logging.INFO,
