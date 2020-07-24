@@ -3,7 +3,7 @@
    roles:
      - role: target-setup-vars
        vars:
-         working_dir: "{{ ansible_env.HOME }}/system_refresh/{{ target_sap_sid }}/.config"
+         working_dir: "{{ ansible_env.HOME }}/system_refresh/{{ target_sap_sid }}/"
          config_file_path: "{{ working_dir }}/.config/sap_config.ini"
 
  - hosts: all
