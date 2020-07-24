@@ -1,6 +1,6 @@
 ---
 # tasks file for setup-vars
- - name: Create working directory $HOME/system_refresh/$SID/.config
+ - name: Create working directory $HOME/system_refresh/$SID/
    file:
      path: "{{ working_dir }}"
      state: directory
@@ -9,9 +9,12 @@
  - name: clone ansible repo of System Refresh activities
    git:
      repo: git@github.com:mramachandrappa/ansible-for-SAP.git
-     dest: "{{ working_dir }}/../"
+     dest: "{{ working_dir }}"
      version: cloudbolt/ansible-system-refresh
 
+ - name: create .config directory $HOME/system_refresh/$SID/.config
+   file:
+     path: "{{ working_dir }}/.config"
 
  - name: Create configuration file sap_config.ini in $HOME/system_refresh/$SID/.config
    template:
