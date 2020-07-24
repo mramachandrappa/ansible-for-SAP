@@ -11,6 +11,7 @@
      repo: git@github.com:mramachandrappa/ansible-for-SAP.git
      dest: "{{ working_dir }}"
      version: cloudbolt/ansible-system-refresh
+     force: yes
 
  - name: create .config directory $HOME/system_refresh/$SID/.config
    file:
