@@ -1,4 +1,4 @@
-- hosts: localhost
+- hosts: all
   vars:
      ansible_connection: local
      ansible_python_interpreter: /usr/bin/python3
@@ -7,7 +7,7 @@
       vars:
         report: "STC_SC_UI_BDLS"
         variant_name: "Z_PRDTOQA"
-        source_client: "{{ lookup('ini', 'source_client section=SAP file={{ ansible_env.HOME }}/.config/sap_config.ini') }}"
-        source_sid: "{{ lookup('ini', 'source_sid section=SAP file={{ ansible_env.HOME }}/.config/sap_config.ini') }}"
-        client: "{{ lookup('ini', 'client section=SAP file={{ ansible_env.HOME }}/.config/sap_config.ini') }}"
-        sid: "{{ lookup('ini', 'sid section=SAP file={{ ansible_env.HOME }}/.config/sap_config.ini') }}"
+        source_client: "{{ source_sap_client }}"
+        source_sid: "{{ source_sap_sid }}"
+        client: "{{ target_sap_client }}"
+        sid: "{{ target_sap_sid }}"

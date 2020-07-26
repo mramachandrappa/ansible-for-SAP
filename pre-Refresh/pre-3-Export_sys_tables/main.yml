@@ -2,6 +2,8 @@
  - hosts: all
    roles:
      - role: copy_exp_ctl
+       vars:
+         config_file_path: "{{ ansible_env.HOME }}/system_refresh/{{ target_sap_sid }}/.config/sap_config.ini"
 
  - hosts: all
    vars:
@@ -9,4 +11,6 @@
      ansible_python_interpreter: /usr/bin/python3
    roles:
      - role: export_system_tables
+       vars:
+         config_file_path: "{{ ansible_env.HOME }}/system_refresh/{{ target_sap_sid }}/.config/sap_config.ini"
 

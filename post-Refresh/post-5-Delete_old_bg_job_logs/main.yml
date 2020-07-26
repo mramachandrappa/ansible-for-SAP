@@ -8,5 +8,6 @@
        vars:
          report: "RSBTCDEL"
          variant_name: "SST_ZDELLOG"
+         config_file_path: "{{ ansible_env.HOME }}/system_refresh/{{ target_sap_sid }}/.config/sap_config.ini"
 
 

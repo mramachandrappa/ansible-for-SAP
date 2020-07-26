@@ -8,5 +8,6 @@
        vars:
          report: "RSTRFCID"
          variant_name: "SST_DELSMQ2"
+         config_file_path: "{{ ansible_env.HOME }}/system_refresh/{{ target_sap_sid }}/.config/sap_config.ini"
 
 

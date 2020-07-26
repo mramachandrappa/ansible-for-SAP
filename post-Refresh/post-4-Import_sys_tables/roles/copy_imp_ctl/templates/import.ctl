@@ -1,3 +1,3 @@
 import
-client= {{ lookup('ini', 'client section=SAP file={{ ansible_env.HOME }}/.config/sap_config.ini') }}
+client= {{ lookup('ini', 'client section=SAP file={{ config_file_path }}') }}
 file= '/tmp/exp_qa_all.dat'
