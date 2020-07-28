@@ -5,6 +5,12 @@
        vars:
          working_dir: "{{ ansible_env.HOME }}/system_refresh/{{ target_sap_sid }}"
          config_file_path: "{{ working_dir }}/.config/sap_config.ini"
+       when: ansible_facts['distribution'] != "Windows"
+     - role: win_target-setup-vars
+       vars:
+         working_dir: "{{ ansible_env.USERPROFILE }}/system_refresh/{{ target_sap_sid }}"
+         config_file_path: "{{ working_dir }}/.config/sap_config.ini"
+       when: ansible_facts['distribution'] == "Windows"
 
  - hosts: all
    vars:
@@ -15,3 +21,9 @@
        vars:
          working_dir: "{{ ansible_env.HOME }}/system_refresh/{{ target_sap_sid }}"
          config_file_path: "{{ working_dir }}/.config/sap_config.ini"
+       when: ansible_facts['distribution'] != "Windows"
+     - role: win_setup-vars
+       vars:
+         working_dir: "{{ ansible_env.USERPROFILE }}/system_refresh/{{ target_sap_sid }}"
+         config_file_path: "{{ working_dir }}/.config/sap_config.ini"
+       when: ansible_facts['distribution'] == "Windows"
