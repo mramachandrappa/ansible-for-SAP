@@ -69,7 +69,7 @@
  - name: Storing transport number
    template:
      src: transport_number
-     dest: /tmp/transport_number
+     dest: "{{ playbook_dir }}/../../transport_number"
      force: yes
      backup: yes
    vars:

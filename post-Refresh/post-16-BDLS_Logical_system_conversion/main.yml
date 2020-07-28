@@ -7,7 +7,8 @@
       vars:
         report: "STC_SC_UI_BDLS"
         variant_name: "Z_PRDTOQA"
-        source_client: "{{ source_sap_client }}"
-        source_sid: "{{ source_sap_sid }}"
-        client: "{{ target_sap_client }}"
-        sid: "{{ target_sap_sid }}"
+        config_file_path: "{{ ansible_env.HOME }}/system_refresh/{{ target_sap_sid }}/.config/sap_config.ini"
+        source_client: "{{ lookup('ini', 'source_sap_client section=SAP file={{ config_file_path }}') }}"
+        source_sid: "{{ lookup('ini', 'source_sap_sid section=SAP file={{ config_file_path }}') }}"
+        client: "{{ lookup('ini', 'client section=SAP file={{ config_file_path }}') }}"
+        sid: "{{ lookup('ini', 'sid section=SAP file={{ config_file_path }}') }}"

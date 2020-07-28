@@ -17,7 +17,7 @@
  - name: Storing existing users list
    template:
      src: existing_locked_users
-     dest: /tmp/post_existing_locked_users
+     dest: "{{ playbook_dir }}/../../post_existing_locked_users"
      force: yes
      backup: yes
    vars:

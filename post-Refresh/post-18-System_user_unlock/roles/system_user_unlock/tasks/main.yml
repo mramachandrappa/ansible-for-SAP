@@ -8,7 +8,7 @@
  - name: Unlock Users
    sap_function_call:
      BAPI_USER_UNLOCK:
-       EXCEPTION_USERS: "{{lookup('file', '/tmp/existing_locked_users')}}"
+       EXCEPTION_USERS: "{{lookup('file', '{{ playbook_dir }}/../../existing_locked_users')}}"
        ALL_USERS: "{{ users.meta.USERS }}"
    register: unlock
 
