@@ -4,6 +4,12 @@
      - role: copy_exp_ctl
        vars:
          config_file_path: "{{ ansible_env.HOME }}/system_refresh/{{ target_sap_sid }}/.config/sap_config.ini"
+       when: '"Windows" not in ansible_facts["distribution"]'
+
+     - role: win_copy_exp_ctl
+       vars:
+         config_file_path: "{{ ansible_env.USERPROFILE }}/system_refresh/{{ target_sap_sid }}/.config/sap_config.ini"
+       when: '"Windows" in ansible_facts["distribution"]'
 
  - hosts: all
    vars:
