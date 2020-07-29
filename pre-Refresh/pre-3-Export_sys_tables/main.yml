@@ -11,12 +11,12 @@
          config_file_path: "{{ ansible_env.USERPROFILE }}/system_refresh/{{ target_sap_sid }}/.config/sap_config.ini"
        when: '"Windows" in ansible_facts["distribution"]'
 
- - hosts: all
-   vars:
-     ansible_connection: local
-     ansible_python_interpreter: /usr/bin/python3
-   roles:
-     - role: export_system_tables
-       vars:
-         config_file_path: "{{ ansible_env.HOME }}/system_refresh/{{ target_sap_sid }}/.config/sap_config.ini"
-
+# - hosts: all
+#   vars:
+#     ansible_connection: local
+#     ansible_python_interpreter: /usr/bin/python3
+#   roles:
+#     - role: export_system_tables
+#       vars:
+#         config_file_path: "{{ ansible_env.HOME }}/system_refresh/{{ target_sap_sid }}/.config/sap_config.ini"
+#
