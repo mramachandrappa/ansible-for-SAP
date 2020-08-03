@@ -52,7 +52,7 @@
 
  - name: Waiting for user master export to complete
    pause:
-     seconds: 10
+     seconds: 60
 
  - name: Delete Variant
    variant:
@@ -65,6 +65,8 @@
      FETCH: sys_params
    register: sys_params
    tags: ctc
+
+ - debug: var=sys_params
 
  - name: Storing transport number
    template:
