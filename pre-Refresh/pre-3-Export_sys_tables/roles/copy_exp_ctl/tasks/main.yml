@@ -5,27 +5,5 @@
       src: exp.ctl
       dest: /tmp/exp.ctl
       group: sapsys
-      owner: "{{ lookup('ini', 'sid section=SAP file={{ config_file_path }}')|lower }}adm"
+      owner: "{{ lookup('ini', 'sid section=SAP file={{ config_file_path }}') | lower }}adm"
       force: yes
-    become: yes
-
-  - name: Insert Command
-    sap_function_call:
-      ZSXPG_COMMAND_INSERT:
-        NAME: 'ZTABEXP'
-        OPSYSTEM: 'Linux'
-        OPCOMMAND: 'R3trans'
-        PARAMETERS: "-w /tmp/exp_ecc.log /tmp/exp.ctl"
-    register: comm_insert
-    delegate_to: localhost
-
-  - debug: var=comm_insert
-
-  - name: Execute Command
-    sap_function_call:
-      SXPG_COMMAND_EXECUTE:
-        NAME: "ZTABEXP"
-    register: comm_execute
-    delegate_to: localhost
-
-  - debug: var=comm_execute
