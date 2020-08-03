@@ -1,5 +1,8 @@
 ---
  - hosts: all
+   vars:
+       ansible_user: "{{ target_sap_sid | lower}}adm"
+       ansible_ssh_pass: "{{ lookup('ini', 'remote_ssh_passwd section=SAP file={{ config_file_path }}') }}"
    roles:
      - role: copy_imp_ctl
        vars:
