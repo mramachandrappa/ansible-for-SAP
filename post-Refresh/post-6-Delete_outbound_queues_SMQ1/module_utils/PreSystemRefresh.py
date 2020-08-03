@@ -242,7 +242,13 @@ class PreSystemRefresh:
             for data in output['DATA']:
                 for val in data.values():
                     trans_val = ((val.split()[1][:3] + 'C') + str(int(val.split()[1][4:]) + 1))
-                    result["trans_val"] = trans_val
+
+            if trans_val is None:
+                result["trans_val"] = self.creds['sid'] + 'K900001'
+            else:
+                result["trans_val"] = trans_val
+
+#-----------------------------------TRANSPORT VALUE --------------------------------------------#
 
             try:
                 trans_output = self.conn.call("RFC_READ_TABLE", QUERY_TABLE='E070',
@@ -260,7 +266,12 @@ class PreSystemRefresh:
                         trans.append(val.split()[0])
 
             trans.sort(reverse=True)
-            result['UME_Trans_No'] = trans[0]
+            if trans:
+                result['UME_Trans_No'] = trans[0]
+            else:
+                result['UME_Trans_No'] = trans
+
+#---------------------------------- USER MASTER EXPORT TRANS NO-----------------------------------#
 
             try:
                 output = self.conn.call("RFC_READ_TABLE", QUERY_TABLE='TMSPCONF')
@@ -282,6 +293,8 @@ class PreSystemRefresh:
                 result["sid_ctc_val"] = self.creds['sid'] + '.' + self.creds['client']
             else:
                 result["sid_ctc_val"] = self.creds['sid']
+
+#-------------------------------------- BIN PATH / CTC VAL ------------------------------------------#
 
             result["bin_path"] = bin_path
             result["client"] = self.creds['client']
