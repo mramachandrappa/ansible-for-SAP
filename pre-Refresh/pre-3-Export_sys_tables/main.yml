@@ -1,21 +1,22 @@
 ---
  - hosts: all
    vars:
-     config_file_path: "{{ lookup('env','HOME') }}/{{ target_sap_sid }}/.config/sap_config.ini"
-     ansible_user: "{{ target_sap_sid | lower}}adm"
-     ansible_ssh_pass: "{{ lookup('ini', 'remote_ssh_passwd section=SAP file={{ config_file_path }}') }}"
+     config_file_path: "{{ lookup('env','HOME') }}/system_refresh/{{ target_sap_sid }}/.config/sap_config.ini"
+     ansible_user: "{{ lookup('ini', 'remote_ssh_user section=SAP file={{ config_file_path }}') }}"
    roles:
      - role: copy_exp_ctl
 
  - hosts: all
    vars:
-     config_file_path: "{{ lookup('env','HOME') }}/{{ target_sap_sid }}/.config/sap_config.ini"
+     config_file_path: "{{ lookup('env','HOME') }}/system_refresh/{{ target_sap_sid }}/.config/sap_config.ini"
      ansible_connection: local
      ansible_python_interpreter: /usr/bin/python3
    roles:
      - role: export_system_tables
-       tags: linux
+       tags:
+         - linux
        when: '"Windows" not in ansible_facts["distribution"]'
      - role: export_system_tables
-       tags: windows
+       tags:
+         - windows
        when: '"Windows" in ansible_facts["distribution"]'

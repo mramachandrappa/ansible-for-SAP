@@ -7,6 +7,7 @@
       group: sapsys
       owner: "{{ lookup('ini', 'sid section=SAP file={{ config_file_path }}') | lower }}adm"
       force: yes
+    become: yes
     when: '"Windows" not in ansible_facts["distribution"]'
 
   - name: copy exp.ctl file
