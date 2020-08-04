@@ -18,8 +18,14 @@
       force: yes
     become: yes
 
+  - name: copy stopsap.sh
+    template:
+      src: stopsap.sh
+      dest: /tmp/stopsap.sh
+    mode: u=rwx,g=rx,o=rx
+
   - name: Stop sap application
-    command: stopsap r3
+    command: /tmp/stopsap.sh
     become: yes
     become_user: "{{ lookup('ini', 'sid section=SAP file={{ config_file_path }} ')|lower }}adm"
 
@@ -31,8 +37,10 @@
     command: /tmp/systemdb_restore.sh
     become: yes
     become_user: "{{ lookup('ini', 'database_sid section=SAP file={{ config_file_path }} ')|lower }}adm"
+    mode: u=rwx,g=rx,o=rx
 
   - name: Run tenantdb backup script
     command: /tmp/tenantdb_restore.sh
     become: yes
     become_user: "{{ lookup('ini', 'database_sid section=SAP file={{ config_file_path }} ')|lower }}adm"
+    mode: u=rwx,g=rx,o=rx
