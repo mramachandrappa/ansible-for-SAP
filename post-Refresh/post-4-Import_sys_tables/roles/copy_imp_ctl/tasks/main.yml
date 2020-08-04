@@ -1,29 +1,19 @@
 ---
-# tasks file for copy_exp_ctl
-  - name: copy exp.ctl file
+# tasks file for copy_imp_ctl
+  - name: copy import.ctl file
     template:
       src: import.ctl
       dest: /tmp/import.ctl
       group: sapsys
       owner: "{{ lookup('ini', 'sid section=SAP file={{ config_file_path }}')|lower }}adm"
       force: yes
-    become: yes
+    when: '"Windows" not in ansible_facts["distribution"]'
 
-  - name: Insert Command
-    sap_function_call:
-      ZSXPG_COMMAND_INSERT:
-        NAME: 'ZTABIMP'
-        OPSYSTEM: 'Linux'
-        OPCOMMAND: 'R3trans'
-        PARAMETERS: '-w /tmp/import_ecc.log /tmp/import.ctl'
-    register: comm_insert
-    delegate_to: localhost
-
-  - name: Execute Command
-    sap_function_call:
-      SXPG_COMMAND_EXECUTE:
-        NAME: "ZTABIMP"
-    register: comm_execute
-    delegate_to: localhost
-
-  - debug: var=comm_execute
+  - name: copy import.ctl file
+    win_template:
+      src: import.ctl
+      dest: "{{ ansible_env.TEMP }}\import.ctl"
+      group: sapsys
+      owner: "{{ lookup('ini', 'sid section=SAP file={{ config_file_path }}')|lower }}adm"
+      force: yes
+    when: '"Windows" in ansible_facts["distribution"]'

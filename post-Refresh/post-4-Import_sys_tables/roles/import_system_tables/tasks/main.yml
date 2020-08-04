@@ -8,7 +8,7 @@
         OPCOMMAND: 'R3trans'
         PARAMETERS: '-w /tmp/import_ecc.log /tmp/import.ctl'
     register: comm_insert
-    ignore_errors: yes
+    tags: linux
 
   - name: Insert Command
     sap_function_call:
@@ -18,7 +18,7 @@
         OPCOMMAND: 'R3trans'
         PARAMETERS: '-w {{ ansible_env.TEMP }}/import_ecc.log {{ ansible_env.TEMP }}/import.ctl'
     register: comm_insert
-    ignore_errors: yes
+    tags: windows
 
   - debug: var=comm_insert
 
@@ -27,5 +27,8 @@
       SXPG_COMMAND_EXECUTE:
         NAME: "ZTABIMP"
     register: comm_execute
+    tags:
+      - windows
+      - linux
 
   - debug: var=comm_execute
