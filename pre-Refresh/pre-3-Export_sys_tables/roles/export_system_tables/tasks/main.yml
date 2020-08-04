@@ -8,17 +8,6 @@
         OPCOMMAND: 'R3trans'
         PARAMETERS: '-w /tmp/exp_ecc.log /tmp/exp.ctl'
     register: comm_insert
-    ignore_errors: yes
-
-  - name: Insert Command
-    sap_function_call:
-      ZSXPG_COMMAND_INSERT:
-        NAME: 'ZTABEXP'
-        OPSYSTEM: 'Linux'
-        OPCOMMAND: 'R3trans'
-        PARAMETERS: "-w {{ ansible_env.TEMP }}\exp_ecc.log {{ ansible_env.TEMP }}\exp.ctl"
-    register: comm_insert
-    ignore_errors: yes
 
   - debug: var=comm_insert
 
