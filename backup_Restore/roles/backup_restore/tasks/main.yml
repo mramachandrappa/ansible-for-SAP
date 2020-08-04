@@ -23,9 +23,9 @@
     become: yes
     become_user: "{{ lookup('ini', 'sid section=SAP file={{ config_file_path }} ')|lower }}adm"
 
- - name: Waiting for sap application to shut down
-   pause:
-     seconds: 120
+  - name: Waiting for sap application to shut down
+    pause:
+      seconds: 120
 
   - name: Run systemdb backup script
     command: /tmp/systemdb_restore.sh
