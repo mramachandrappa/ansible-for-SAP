@@ -6,6 +6,8 @@
    roles:
      - role: backup_restore
        vars:
+         ashost: "{{ lookup('ini', 'ashost section=SAP file={{ config_file_path }} ') }}"
+         sysnr: "{{ lookup('ini', 'sysnr section=SAP file={{ config_file_path }} ') }}"
          db_sysnr: "{{ lookup('ini', 'db_sysnr section=SAP file={{ config_file_path }} ') }}"
          db_sid: "{{ lookup('ini', 'db_sid section=SAP file={{ config_file_path }} ') }}"
          source_db_systemuser_passwd: "{{ lookup('ini', 'source_db_systemuser_passwd section=SAP file={{ config_file_path }} ') }}"
