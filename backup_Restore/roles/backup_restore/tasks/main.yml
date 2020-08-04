@@ -50,6 +50,16 @@
       mode: u=rwx,g=rx,o=rx
     become: yes
 
+  - name: copy schema_change.sh
+    template:
+      src: schema_change.sh
+      dest: /tmp/schema_change.sh
+      group: sapsys
+      owner: "{{ lookup('ini', 'db_sid section=SAP file={{ config_file_path }} ')|lower }}adm"
+      force: yes
+      mode: u=rwx,g=rx,o=rx
+    become: yes
+
   - name: Stop sap application
     command: /tmp/stopsap.sh
     become: yes
@@ -71,5 +81,10 @@
 
   - name: Run tenantdb backup script
     command: /tmp/tenantdb_restore.sh
+    become: yes
+    become_user: "{{ lookup('ini', 'db_sid section=SAP file={{ config_file_path }} ')|lower }}adm"
+
+  - name: Run schema_change.sh
+    command: /tmp/schema_change.sh
     become: yes
     become_user: "{{ lookup('ini', 'db_sid section=SAP file={{ config_file_path }} ')|lower }}adm"

@@ -8,3 +8,6 @@
        vars:
          db_sysnr: "{{ lookup('ini', 'db_sysnr section=SAP file={{ config_file_path }} ') }}"
          db_sid: "{{ lookup('ini', 'db_sid section=SAP file={{ config_file_path }} ') }}"
+         source_db_system_user_pass: "{{ lookup('ini', 'source_db_system_user_pass section=SAP file={{ config_file_path }} ') }}"
+         db_hostname: "{{ lookup('ini', 'db_hostname section=SAP file={{ config_file_path }} ') }}"
+         source_schema_passwd: "{{ lookup('ini', 'source_schema_passwd section=SAP file={{ config_file_path }} ') }}"
