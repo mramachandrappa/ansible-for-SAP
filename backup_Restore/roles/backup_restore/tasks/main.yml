@@ -151,4 +151,4 @@
     command: /tmp/startsap.sh
     become: yes
     become_user: "{{ lookup('ini', 'sid section=SAP file={{ config_file_path }} ')|lower }}adm"
-    when:
+    when: '"0000" in check.stdout'
