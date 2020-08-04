@@ -107,6 +107,10 @@
     become: yes
     become_user: "{{ lookup('ini', 'db_sid section=SAP file={{ config_file_path }} ')|lower }}adm"
 
+  - name: Waiting for tenantdb to startup
+    pause:
+      seconds: 120
+
   - name: Run schema_change.sh
     command: /tmp/schema_change.sh
     become: yes
