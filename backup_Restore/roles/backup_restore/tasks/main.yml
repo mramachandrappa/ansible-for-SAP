@@ -30,6 +30,16 @@
       mode: u=rwx,g=rx,o=rx
     become: yes
 
+  - name: copy stop_db.sh
+    template:
+      src: stop_db.sh
+      dest: /tmp/stop_db.sh
+      group: sapsys
+      owner: "{{ lookup('ini', 'db_sid section=SAP file={{ config_file_path }} ')|lower }}adm"
+      force: yes
+      mode: u=rwx,g=rx,o=rx
+    become: yes
+
   - name: copy user.sql
     template:
       src: user.sql
@@ -67,7 +77,16 @@
 
   - name: Waiting for sap application to shut down
     pause:
-      seconds: 120
+      seconds: 30
+
+  - name: stop db
+    command: /tmp/stop_db.sh
+    become: yes
+    become_user: "{{ lookup('ini', 'db_sid section=SAP file={{ config_file_path }} ')|lower }}adm"
+
+  - name: Waiting for sap application to shut down
+    pause:
+      seconds: 60
 
   - name: Run systemdb restore script
     command: /tmp/systemdb_restore.sh
