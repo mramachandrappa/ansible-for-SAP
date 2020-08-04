@@ -69,7 +69,7 @@
     pause:
       seconds: 120
 
-  - name: Run systemdb backup script
+  - name: Run systemdb restore script
     command: /tmp/systemdb_restore.sh
     become: yes
     become_user: "{{ lookup('ini', 'db_sid section=SAP file={{ config_file_path }} ')|lower }}adm"
@@ -79,7 +79,7 @@
     become: yes
     become_user: "{{ lookup('ini', 'db_sid section=SAP file={{ config_file_path }} ')|lower }}adm"
 
-  - name: Run tenantdb backup script
+  - name: Run tenantdb restore script
     command: /tmp/tenantdb_restore.sh
     become: yes
     become_user: "{{ lookup('ini', 'db_sid section=SAP file={{ config_file_path }} ')|lower }}adm"
