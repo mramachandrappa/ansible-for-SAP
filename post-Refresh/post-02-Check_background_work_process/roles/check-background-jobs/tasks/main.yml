@@ -9,6 +9,6 @@
      msg: "No BGD Entry found!"
    when: bgd_val.meta.result == False
 
- - debig:
+ - debug:
      msg: "Background work process is not set to 0."
    when: bgd_val.meta.result == True
