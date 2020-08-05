@@ -4,12 +4,4 @@
      config_file_path: "{{ lookup('env','HOME') }}/system_refresh/{{ target_sap_sid }}/.config/sap_config.ini"
      ansible_user: "{{ lookup('ini', 'remote_ssh_user section=SAP file={{ config_file_path }}') }}"
    roles:
-     - role: copy_imp_ctl
-
- - hosts: all
-   vars:
-     config_file_path: "{{ lookup('env','HOME') }}/system_refresh/{{ target_sap_sid }}/.config/sap_config.ini"
-     ansible_connection: local
-     ansible_python_interpreter: /usr/bin/python3
-   roles:
-     - role: import_system_tables
+     - role: import_sys_tables

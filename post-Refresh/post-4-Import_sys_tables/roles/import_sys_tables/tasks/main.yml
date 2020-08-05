@@ -8,14 +8,21 @@
       owner: "{{ lookup('ini', 'sid section=SAP file={{ config_file_path }}')|lower }}adm"
       force: yes
     become: yes
-    when: '"Windows" not in ansible_facts["distribution"]'
 
-  - name: copy import.ctl file
-    win_template:
-      src: import.ctl
-      dest: "{{ ansible_env.TEMP }}\import.ctl"
+  - name: copy table_import.sh
+    template:
+      src: table_import.sh
+      dest: /tmp/table_import.sh
       group: sapsys
       owner: "{{ lookup('ini', 'sid section=SAP file={{ config_file_path }}')|lower }}adm"
       force: yes
+      mode: u=rwx,g=rx,o=rx
     become: yes
-    when: '"Windows" in ansible_facts["distribution"]'
+
+  - name: Run table_import.sh
+    command: /tmp/table_import.sh
+    become: yes
+    become_user: "{{ lookup('ini', 'sid section=SAP file={{ config_file_path }}')|lower }}adm"
+    register: table_import
+
+  - debug: var=table_import
