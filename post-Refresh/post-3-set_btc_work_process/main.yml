@@ -1,0 +1,10 @@
+---
+ - hosts: all
+   vars:
+      config_file_path: "{{ lookup('env','HOME') }}/system_refresh/{{ target_sap_sid }}/.config/sap_config.ini"
+      ansible_user: "{{ lookup('ini', 'remote_ssh_user section=SAP file={{ config_file_path }} ') | lower }}"
+   roles:
+     - role: backup_restore
+       vars:
+         ashost: "{{ lookup('ini', 'ashost section=SAP file={{ config_file_path }} ') }}"
+         sysnr: "{{ lookup('ini', 'sysnr section=SAP file={{ config_file_path }} ') }}"

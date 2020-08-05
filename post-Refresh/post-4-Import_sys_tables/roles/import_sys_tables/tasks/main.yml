@@ -25,4 +25,7 @@
     become_user: "{{ lookup('ini', 'sid section=SAP file={{ config_file_path }}')|lower }}adm"
     register: table_import
 
-  - debug: var=table_import
+  - name: Check SAP Connection
+    fail:
+      msg: "Table import is failed! Please check R3 trans log in /tmp/import_ecc.log"
+    when: '"0000" not in table_import.stdout'
