@@ -31,7 +31,7 @@
        NAME: 'ZTP_IMPORTTR'
        OPSYSTEM: 'Linux'
        OPCOMMAND: 'tp'
-       PARAMETERS: "addtobuffer {{ lookup('file', '{{ playbook_dir }}/../../transport_number') }} {{ sys_params.meta.stdout.sid_val }} CLIENT={{ sys_params.meta.stdout.client }} pf={{ sys_params.meta.stdout.bin_path }}/TP_DOMAIN_{{ sys_params.meta.stdout.sid_val }}.PFL"
+       PARAMETERS: "import {{ lookup('file', '{{ playbook_dir }}/../../transport_number') }} {{ sys_params.meta.stdout.sid_val }} CLIENT={{ sys_params.meta.stdout.client }} u1248 pf={{ sys_params.meta.stdout.bin_path }}/TP_DOMAIN_{{ sys_params.meta.stdout.sid_val }}.PFL"
    register: comm_insert
 
  - debug: var=comm_insert
@@ -52,7 +52,7 @@
    vars:
      client: "{{ sys_params.meta.stdout.client }}"
      sid_ctc_val: "{{ sys_params.meta.stdout.sid_ctc_val }}"
-     UME_Trans_No: "{{ sys_params.meta.stdout.UME_Trans_No }}"
+     UME_Trans_No: "{{ playbook_dir }}/../../transport_number"
    tags: ctc
 
  - name: Check Variant
