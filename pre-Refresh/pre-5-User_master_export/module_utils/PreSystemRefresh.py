@@ -239,14 +239,19 @@ class PreSystemRefresh:
 
             result = dict()
             trans_val = None
-            for data in output['DATA']:
-                for val in data.values():
-                    trans_val = ((val.split()[1][:3] + 'C') + str(int(val.split()[1][4:]) + 1))
+            try:
+                for data in output['DATA']:
+                    for val in data.values():
+                        trans_val = ((val.split()[1][:3] + 'C') + str(int(val.split()[1][4:]) + 1))
 
-            if trans_val is None:
-                result["trans_val"] = self.creds['sid'] + 'K900001'
-            else:
-                result["trans_val"] = trans_val
+                if trans_val is None:
+                    result["trans_val"] = self.creds['sid'] + 'K900001'
+                else:
+                    result["trans_val"] = trans_val
+            except Exception as e:
+                logging.error("FETCH: Failed to fetch trans_val. {}".format(e))
+                result["trans_val"] = "Failed"
+                pass
 
 #-----------------------------------TRANSPORT VALUE --------------------------------------------#
 
@@ -281,7 +286,7 @@ class PreSystemRefresh:
 
                 module.fail_json(msg=self.err, error=to_native(e), exception=traceback.format_exc())
 
-            ctc = None
+            ctc = ""
             bin_path = None
             for field in output['DATA']:
                 if field['WA'].split()[1] == 'CTC' and self.creds['sid'] in field['WA'].split()[0]:
@@ -304,14 +309,8 @@ class PreSystemRefresh:
                          "client='{}', sid='{}'".format(result['trans_val'], result['UME_Trans_No'], result['bin_path'],
                                                         result["sid_ctc_val"], ctc, result['client'], result['sid_val']))
 
-            if trans_val and ctc is not None:
-                self.data['stdout'] = result
-                module.exit_json(changed=True, meta=self.data)
-            else:
-                logging.error("FETCH: trans_val or ctc is found None!")
-                self.err = "Failed to fetch {}".format(params['sys_params'])
-
-                module.fail_json(msg=self.err, error=to_native(), exception=traceback.format_exc())
+            self.data['stdout'] = result
+            module.exit_json(changed=True, meta=self.data)
 
     def check_variant(self, module, report, variant_name):
         try:
