@@ -1,11 +1,16 @@
 ---
 # tasks file for copy_co_data_files
  - name: copy co files
-   copy: src= {{ item }} dest= {{ cofiles_path }}
+   copy: src={{ item }} dest={{ cofiles_path }} mode=0755
    with_fileglob:
-     - /files/K*
+           - K*
+   become: yes
+   become_user: "{{ lookup('ini', 'sid section=SAP file={{ config_file_path }} ')|lower }}adm"
 
  - name: copy data files
-   copy: src= {{ item }} dest= {{ data_path }}
+   copy: src={{ item }} dest={{ data_path }} mode=0755
    with_fileglob:
-     - /files/R*
+           - R*
+   become: yes
+   become_user: "{{ lookup('ini', 'sid section=SAP file={{ config_file_path }} ')|lower }}adm"
+
