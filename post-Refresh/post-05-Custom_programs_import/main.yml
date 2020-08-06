@@ -18,8 +18,8 @@
    roles:
      - role: copy_co_data_files
        vars:
-         cofiles_path: "{{ sysparams.meta.stdout.co_files }}"
-         data_path: "{{ sysparams.meta.stdout.data_path }}"
+         cofiles_path: "{{ sys_params.meta.stdout.co_files }}"
+         data_path: "{{ sys_params.meta.stdout.data_path }}"
 
  - hosts: all
    vars:
