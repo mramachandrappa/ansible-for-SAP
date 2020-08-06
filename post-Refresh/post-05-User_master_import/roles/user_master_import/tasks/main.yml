@@ -11,7 +11,7 @@
        NAME: 'ZTP_ADDTOBUFFER'
        OPSYSTEM: 'Linux'
        OPCOMMAND: 'tp'
-       PARAMETERS: "addtobuffer {{ lookup('file', '{{ playbook_dir }}/../../transport_number') }} {{ sys_params.meta.stdout.sid_val }} pf={{ sys_params.meta.stdout.bin_path }}/TP_DOMAIN_{{ sys_params.meta.stdout.sid_val }}.PFL"
+       PARAMETERS: "addtobuffer {{ lookup('file', '{{ playbook_dir }}/../../transport_number') }} {{ sys_params.meta.stdout.sid_val }} u1248 pf={{ sys_params.meta.stdout.bin_path }}/TP_DOMAIN_{{ sys_params.meta.stdout.sid_val }}.PFL"
    register: comm_insert
 
  - debug: var=comm_insert
