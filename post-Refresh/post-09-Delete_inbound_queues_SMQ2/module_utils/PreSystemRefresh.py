@@ -288,11 +288,15 @@ class PreSystemRefresh:
 
             ctc = ""
             bin_path = None
+            co_files = None
+            data_path = None
             for field in output['DATA']:
                 if field['WA'].split()[1] == 'CTC' and self.creds['sid'] in field['WA'].split()[0]:
                     ctc = field['WA'].split()[2]
                 if field['WA'].split()[1] == 'TRANSDIR' and self.creds['sid'] in field['WA'].split()[0]:
                     bin_path = field['WA'].split()[2] + '/bin'
+                    co_files = field['WA'].split()[2] + '/cofiles'
+                    data_path = field['WA'].split()[2] + '/data'
 
             if ctc is '1':
                 result["sid_ctc_val"] = self.creds['sid'] + '.' + self.creds['client']
@@ -302,12 +306,16 @@ class PreSystemRefresh:
 #-------------------------------------- BIN PATH / CTC VAL ------------------------------------------#
 
             result["bin_path"] = bin_path
+            result["co_files"] = co_files
+            result["data_path"] = data_path
             result["client"] = self.creds['client']
             result["sid_val"] = self.creds['sid']
 
-            logging.info("FETCH: trans_val='{}', UME_Trans_No='{}', bin_path='{}', sid_ctc_val='{}', ctc='{}', "
-                         "client='{}', sid='{}'".format(result['trans_val'], result['UME_Trans_No'], result['bin_path'],
-                                                        result["sid_ctc_val"], ctc, result['client'], result['sid_val']))
+            logging.info("FETCH: trans_val='{}', UME_Trans_No='{}', bin_path='{}', co_files='{}', data_path='{}', "
+                         "sid_ctc_val='{}', ctc='{}', client='{}', sid='{}'".format(result['trans_val'], result['UME_Trans_No'],
+                                                                                    result['bin_path'], result["co_files"],
+                                                                                    result["data_path"], result["sid_ctc_val"],
+                                                                                    ctc, result['client'], result['sid_val']))
 
             self.data['stdout'] = result
             module.exit_json(changed=True, meta=self.data)
