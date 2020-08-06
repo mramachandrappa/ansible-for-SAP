@@ -16,19 +16,10 @@
       config_file_path: "{{ lookup('env','HOME') }}/system_refresh/{{ target_sap_sid }}/.config/sap_config.ini"
       ansible_user: "{{ lookup('ini', 'remote_ssh_user section=SAP file={{ config_file_path }} ') | lower }}"
    roles:
-     - role: copy_co_data_files
-       vars:
-         cofiles_path: "{{ sys_params.meta.stdout.co_files }}"
-         data_path: "{{ sys_params.meta.stdout.data_path }}"
-
- - hosts: all
-   vars:
-     ansible_connection: local
-     ansible_python_interpreter: /usr/bin/python3
-   roles:
      - role: custom_programs_import
        vars:
-         report: "ZRSCLXCOP"
-         variant_name: "ZUSR_IMP"
-
+         client: "{{ lookup('ini', 'client section=SAP file={{ config_file_path }} ') }}"
+         bin_path: "{{ sys_params.meta.stdout.bin_path }}"
+         cofiles_path: "{{ sys_params.meta.stdout.co_files }}"
+         data_path: "{{ sys_params.meta.stdout.data_path }}"
 

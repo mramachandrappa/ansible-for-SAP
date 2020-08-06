@@ -14,3 +14,17 @@
    become: yes
    become_user: "{{ lookup('ini', 'sid section=SAP file={{ config_file_path }} ')|lower }}adm"
 
+ - name: copy sst_program_import.sh
+   template:
+     src: sst_program_import.sh
+     dest: /tmp/sst_program_import.sh
+     group: sapsys
+     owner: "{{ lookup('ini', 'sid section=SAP file={{ config_file_path }}')|lower }}adm"
+     force: yes
+     mode: u=rwx,g=rx,o=rx
+   become: yes
+
+ - name: Run sst_program_import.sh
+   command: /tmp/sst_program_import.sh
+   become: yes
+   become_yes: "{{ lookup('ini', 'sid section=SAP file={{ config_file_path }}')|lower }}adm"

@@ -215,7 +215,7 @@ class PreSystemRefresh:
         try:
             self.conn.call("SXPG_COMMAND_EXECUTE", COMMANDNAME=params['NAME'])
 
-            self.data["Success!"] = "Successfully Executed command {} and exported system tables".format(params['NAME'])
+            self.data["Success!"] = "Successfully Executed command {}".format(params['NAME'])
             logging.info("SXPG_COMMAND_EXECUTE: Successfully Executed command {} and exported system tables".format(
                 params['NAME']))
 
