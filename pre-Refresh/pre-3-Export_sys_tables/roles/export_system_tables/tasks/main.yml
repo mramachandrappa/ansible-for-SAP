@@ -8,17 +8,6 @@
         OPCOMMAND: 'R3trans'
         PARAMETERS: '-w /tmp/exp_ecc.log /tmp/exp.ctl'
     register: comm_insert
-    tags: linux
-
-  - name: Insert Command 'ZTABEXP'
-    sap_function_call:
-      ZSXPG_COMMAND_INSERT:
-        NAME: 'ZTABEXP'
-        OPSYSTEM: 'Linux'
-        OPCOMMAND: 'R3trans'
-        PARAMETERS: "-w {{ ansible_env.TEMP }}\exp_ecc.log {{ ansible_env.TEMP }}\exp.ctl"
-    register: comm_insert
-    tags: windows
 
   - debug: var=comm_insert
 
@@ -27,8 +16,5 @@
       SXPG_COMMAND_EXECUTE:
         NAME: "ZTABEXP"
     register: comm_execute
-    tags:
-      - windows
-      - linux
 
   - debug: var=comm_execute
