@@ -1,9 +1,24 @@
 ---
  - hosts: all
    vars:
+     ansible_connection: local
+     ansible_python_interpreter: /usr/bin/python3
+   tasks:
+     - name: Fetch sys_params (client, sid, bin_path, trans_val, sid_ctc_val)
+       sap_function_call:
+         FETCH: sys_params
+         register: sys_params
+
+     - debug: var=sys_params
+
+ - hosts: all
+   vars:
       ansible_user: "{{ lookup('ini', 'remote_ssh_user section=SAP file={{ config_file_path }} ') | lower }}"
    roles:
      - role: copy_co_data_files
+       vars:
+         cofiles_path: sysparams.meta.stdout.co_files
+         data_path: sysparams.meta.stdout.data_path
 
  - hosts: all
    vars:

@@ -1,18 +1,11 @@
 ---
 # tasks file for copy_co_data_files
- - name: Fetch sys_params (client, sid, bin_path, trans_val, sid_ctc_val)
-   sap_function_call:
-     FETCH: sys_params
-   register: sys_params
-
- - debug: var=sys_params
-
  - name: copy co files
-   copy: src= {{ item }} dest= {{ sys_params.meta.stdout.co_files }}
+   copy: src= {{ item }} dest= {{ cofiles_path }}
    with_fileglob:
      - /files/K*
 
  - name: copy data files
-   copy: src= {{ item }} dest= {{ sys_params.meta.stdout.data }}
+   copy: src= {{ item }} dest= {{ data_path }}
    with_fileglob:
      - /files/R*
