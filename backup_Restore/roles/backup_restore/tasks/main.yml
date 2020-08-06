@@ -152,3 +152,8 @@
     become: yes
     become_user: "{{ lookup('ini', 'sid section=SAP file={{ config_file_path }} ')|lower }}adm"
     when: '"0000" in check.stdout'
+
+  - name: waiting for SAP to startup
+    pause:
+      seconds: 60
+    when: '"0000" in check.stdout'

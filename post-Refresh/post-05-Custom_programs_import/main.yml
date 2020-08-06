@@ -1,0 +1,18 @@
+---
+ - hosts: all
+   vars:
+      ansible_user: "{{ lookup('ini', 'remote_ssh_user section=SAP file={{ config_file_path }} ') | lower }}"
+   roles:
+     - role: copy_co_data_files
+
+ - hosts: all
+   vars:
+     ansible_connection: local
+     ansible_python_interpreter: /usr/bin/python3
+   roles:
+     - role: custom_programs_import
+       vars:
+         report: "ZRSCLXCOP"
+         variant_name: "ZUSR_IMP"
+
+

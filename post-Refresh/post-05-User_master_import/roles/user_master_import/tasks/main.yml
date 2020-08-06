@@ -1,6 +1,5 @@
 ---
-# tasks file for user_master_import
-
+# tasks file for custom_programs_import
  - name: Fetch sys_params (client, sid, bin_path, trans_val, sid_ctc_val)
    sap_function_call:
      FETCH: sys_params
