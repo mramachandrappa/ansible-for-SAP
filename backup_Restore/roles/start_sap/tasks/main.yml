@@ -1,0 +1,58 @@
+---
+# tasks file for start_sap
+  - name: copy startsap.sh
+    template:
+      src: startsap.sh
+      dest: /tmp/startsap.sh
+      group: sapsys
+      owner: "{{ lookup('ini', 'sid section=SAP file={{ config_file_path }} ')|lower }}adm"
+      force: yes
+      mode: u=rwx,g=rx,o=rx
+    become: yes
+
+  - name: copy db_check.sh
+    template:
+      src: db_check.sh
+      dest: /tmp/db_check.sh
+      group: sapsys
+      owner: "{{ lookup('ini', 'sid section=SAP file={{ config_file_path }} ')|lower }}adm"
+      force: yes
+      mode: u=rwx,g=rx,o=rx
+    become: yes
+
+  - name: copy schema_change.sh
+    template:
+      src: schema_change.sh
+      dest: /tmp/schema_change.sh
+      group: sapsys
+      owner: "{{ lookup('ini', 'db_sid section=SAP file={{ config_file_path }} ')|lower }}adm"
+      force: yes
+      mode: u=rwx,g=rx,o=rx
+    become: yes
+
+  - name: Run schema_change.sh
+    command: /tmp/schema_change.sh
+    become: yes
+    become_user: "{{ lookup('ini', 'sid section=SAP file={{ config_file_path }} ')|lower }}adm"
+
+  - name: Run R3trans
+    command: /tmp/db_check.sh
+    become: yes
+    become_user: "{{ lookup('ini', 'sid section=SAP file={{ config_file_path }} ')|lower }}adm"
+    register: check
+
+  - name: Check DB Connection
+    fail:
+      msg: "DB check connection Failed! Please check R3 trans log /tmp/db_check.log"
+    when: '"0000" not in check.stdout'
+
+  - name: Starting SAP
+    command: /tmp/startsap.sh
+    become: yes
+    become_user: "{{ lookup('ini', 'sid section=SAP file={{ config_file_path }} ')|lower }}adm"
+    when: '"0000" in check.stdout'
+
+  - name: waiting for SAP to startup
+    pause:
+      seconds: 60
+    when: '"0000" in check.stdout'

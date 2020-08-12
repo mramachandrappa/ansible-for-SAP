@@ -1,0 +1,49 @@
+---
+# tasks file for del_SMQ1
+ - name: Copy Variables templates containing variant details
+   template:
+        src: variant_data.py.j2
+        dest: "{{playbook_dir}}/module_utils/variant_data.py"
+        force: yes
+
+ - name: Check Variant
+   variant:
+       report: "{{ report }}"
+       variant_name: "{{ variant_name }}"
+       action: check
+   register: var_check
+
+ - name: Delete Variant if already exists
+   variant:
+       report: "{{ report }}"
+       variant_name: "{{ variant_name }}"
+       action: delete
+   when: var_check.meta.stdout == True
+
+ - name: Create Variant
+   variant:
+       report: "{{ report }}"
+       variant_name: "{{ variant_name }}"
+       action: create
+   register: var_create
+
+ - name: Delete Outbound Queues SMQ1
+   sap_function_call:
+     SUBST_START_REPORT_IN_BATCH:
+         IV_JOBNAME: "DELETE_SMQ1_QUEUES"
+         IV_REPNAME: "{{ report }}"
+         IV_VARNAME: "{{ variant_name }}"
+   register: del_SMQ1
+   when: var_create.meta.stdout == True
+
+ - debug: var=del_SMQ1
+
+ - name: Waiting for the above task to delete old background jobs
+   pause:
+     seconds: 10
+
+ - name: Delete Variant
+   variant:
+       report: "{{ report }}"
+       variant_name: "{{ variant_name }}"
+       action: delete

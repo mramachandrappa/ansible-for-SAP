@@ -1,0 +1,18 @@
+#!/usr/bin/python
+
+report = "{{ report }}"
+variant_name = "{{ variant_name }}"
+client = "{{ lookup('ini', 'client section=SAP file={{ config_file_path }}') }}"
+
+desc = dict(
+    MANDT=client,
+    REPORT=report,
+    VARIANT=variant_name
+)
+
+content = [{'SELNAME': 'TID', 'KIND': 'P', 'LOW': '*'},
+           {'SELNAME': 'SET_EXEC', 'KIND': 'P', 'LOW': 'X'}]
+
+text = [{'MANDT': client, 'LANGU': 'EN', 'REPORT': report, 'VARIANT':variant_name, 'VTEXT': 'Delete all TRFC Queues'}]
+
+screen = [{'DYNNR': '1000', 'KIND': 'P'}]

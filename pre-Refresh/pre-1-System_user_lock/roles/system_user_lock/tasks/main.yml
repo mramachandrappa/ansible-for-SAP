@@ -1,0 +1,33 @@
+---
+# tasks file for system_user_lock
+ - name: Fetch entire system user list
+   sap_function_call:
+     FETCH: sys_users
+   register: users
+
+ - debug: var=users
+
+ - name: Fetch existing administer locked users
+   sap_function_call:
+     FETCH: sys_locked_users
+   register: locked_users
+
+ - debug: var=locked_users
+
+ - name: Storing existing users list
+   template:
+     src: existing_locked_users
+     dest: "{{ playbook_dir }}/../../existing_locked_users"
+     force: yes
+     backup: yes
+   vars:
+     EXISTING_LOCKED_USERS: "{{ locked_users.meta.EXISTING_LOCKED_USERS }}"
+
+ - name: Lock Users
+   sap_function_call:
+     BAPI_USER_LOCK:
+       EXCEPTION_USERS: "{{ lookup('ini', 'exception_list section=SAP file={{ config_file_path }}') }}"
+       ALL_USERS: "{{ users.meta.USERS }}"
+   register: lock
+
+ - debug: var=lock

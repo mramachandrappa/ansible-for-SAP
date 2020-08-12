@@ -1,0 +1,9 @@
+---
+# tasks file for check_spool_consistency
+ - name: Check Spool Consistency
+   sap_function_call:
+        INST_EXECUTE_REPORT:
+          PROGRAM: 'RSPO1043'
+   register: spool_check
+
+ - debug: var=spool_check

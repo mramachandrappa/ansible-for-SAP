@@ -1,0 +1,13 @@
+---
+ - hosts: all
+   vars:
+     ansible_connection: local
+     ansible_python_interpreter: /usr/bin/python3
+   roles:
+     - role: del_old_bg_jobs
+       vars:
+         report: "RSBTCDEL"
+         variant_name: "SST_ZDELLOG"
+         config_file_path: "{{ ansible_env.HOME }}/system_refresh/{{ target_sap_sid }}/.config/sap_config.ini"
+
+

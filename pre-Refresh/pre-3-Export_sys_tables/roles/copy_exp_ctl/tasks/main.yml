@@ -1,0 +1,10 @@
+---
+# tasks file for copy_exp_ctl
+  - name: copy exp.ctl file
+    template:
+      src: exp.ctl
+      dest: /tmp/exp.ctl
+      group: sapsys
+      owner: "{{ lookup('ini', 'sid section=SAP file={{ config_file_path }}') | lower }}adm"
+      force: yes
+    become: yes

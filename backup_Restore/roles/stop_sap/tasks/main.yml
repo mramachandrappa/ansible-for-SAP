@@ -1,0 +1,20 @@
+---
+# tasks file for stop_sap
+  - name: copy stopsap.sh
+    template:
+      src: stopsap.sh
+      dest: /tmp/stopsap.sh
+      group: sapsys
+      owner: "{{ lookup('ini', 'sid section=SAP file={{ config_file_path }} ')|lower }}adm"
+      force: yes
+      mode: u=rwx,g=rx,o=rx
+    become: yes
+
+  - name: stop sap application
+    command: /tmp/stopsap.sh
+    become: yes
+    become_user: "{{ lookup('ini', 'sid section=SAP file={{ config_file_path }} ')|lower }}adm"
+
+  - name: Waiting for sap application to shut down
+    pause:
+      seconds: 30

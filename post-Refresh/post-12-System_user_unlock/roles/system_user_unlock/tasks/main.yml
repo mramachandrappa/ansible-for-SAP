@@ -1,0 +1,16 @@
+---
+# tasks file for system_user_unlock
+ - name: Fetch entire system user list
+   sap_function_call:
+     FETCH: sys_users
+   register: users
+
+ - name: Unlock Users
+   sap_function_call:
+     BAPI_USER_UNLOCK:
+       EXCEPTION_USERS: "{{lookup('file', '{{ playbook_dir }}/../../existing_locked_users')}}"
+       ALL_USERS: "{{ users.meta.USERS }}"
+   register: unlock
+
+ - debug: var=unlock
+

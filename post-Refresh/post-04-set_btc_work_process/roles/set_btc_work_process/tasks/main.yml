@@ -1,0 +1,16 @@
+---
+# tasks file for set_btc_work_process
+ - name: copy btc_set.sh
+   template:
+     src: btc_set.sh
+     dest: /tmp/btc_set.sh
+     group: sapsys
+     owner: "{{ lookup('ini', 'sid section=SAP file={{ config_file_path }} ')|lower }}adm"
+     force: yes
+     mode: u=rwx,g=rx,o=rx
+   become: yes
+
+ - name: Set background workprocess to normal and restart sap
+   command: /tmp/btc_set.sh
+   become: yes
+   become_user: "{{ lookup('ini', 'sid section=SAP file={{ config_file_path }} ')|lower }}adm"

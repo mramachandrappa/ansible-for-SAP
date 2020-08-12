@@ -1,0 +1,9 @@
+---
+# tasks file for system_user_lock
+ - name: Clean CCMS data
+   sap_function_call:
+        INST_EXECUTE_REPORT:
+          PROGRAM: 'CSM_TAB_CLEAN'
+   register: ccms_data
+
+ - debug: var=ccms_data

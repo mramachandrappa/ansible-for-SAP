@@ -1,0 +1,44 @@
+---
+# tasks file for zscreen_login_info_change
+ - name: Fetch sys_params (client, sid, bin_path, trans_val, sid_ctc_val)
+   sap_function_call:
+     FETCH: sys_params
+   register: sys_params
+
+ - name: Insert Command to add the transport to buffer
+   sap_function_call:
+     ZSXPG_COMMAND_INSERT:
+       NAME: 'ZTP_ADD2BUFFER'
+       OPSYSTEM: 'Linux'
+       OPCOMMAND: 'tp'
+       PARAMETERS: "addtobuffer {{ lookup('file', '{{ playbook_dir }}/../../transport_number') }} {{ sys_params.meta.stdout.sid_val }} pf={{ sys_params.meta.stdout.bin_path }}/TP_DOMAIN_{{ sys_params.meta.stdout.sid_val }}.PFL"
+   register: comm_insert
+
+ - debug: var=comm_insert
+
+ - name: Execute Command
+   sap_function_call:
+     SXPG_COMMAND_EXECUTE:
+       NAME: 'ZTP_ADD2BUFFER'
+   register: comm_execute
+
+ - debug: var=comm_execute
+
+ - name: Insert Command to import the transport to system.
+   sap_function_call:
+     ZSXPG_COMMAND_INSERT:
+       NAME: 'ZTP_IMPORTT1'
+       OPSYSTEM: 'Linux'
+       OPCOMMAND: 'tp'
+       PARAMETERS: "addtobuffer {{ lookup('file', '{{ playbook_dir }}/../../transport_number') }} {{ sys_params.meta.stdout.sid_val }} CLIENT={{ sys_params.meta.stdout.client }} pf={{ sys_params.meta.stdout.bin_path }}/TP_DOMAIN_{{ sys_params.meta.stdout.sid_val }}.PFL"
+   register: comm_insert
+
+ - debug: var=comm_insert
+
+ - name: Execute Command
+   sap_function_call:
+     SXPG_COMMAND_EXECUTE:
+       NAME: 'ZTP_IMPORTT1'
+   register: comm_execute
+
+ - debug: var=comm_execute

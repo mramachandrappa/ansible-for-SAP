@@ -1,0 +1,9 @@
+---
+# tasks file for suspend-background-jobs
+ - name: Suspend background jobs
+   sap_function_call:
+        INST_EXECUTE_REPORT:
+          PROGRAM: 'BTCTRNS1'
+   register: suspend_bg_jobs
+
+ - debug: var=suspend_bg_jobs

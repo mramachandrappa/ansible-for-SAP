@@ -1,0 +1,14 @@
+---
+# tasks file for check-background-jobs
+ - name: Check background workprocess
+   sap_function_call:
+      FETCH: bgd_val
+   register: bgd_val
+
+ - debug:
+     msg: "No BGD Entry found!"
+   when: bgd_val.meta.result == False
+
+ - debug:
+     msg: "Background work process is not set to 0."
+   when: bgd_val.meta.result == True

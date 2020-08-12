@@ -1,0 +1,23 @@
+#!/usr/bin/python
+
+report = "{{ report }}"
+variant_name = "{{ variant_name }}"
+
+desc = dict(
+    MANDT="{{ client }}" ,
+    REPORT=report,
+    VARIANT=variant_name
+)
+
+content = [{'SELNAME': 'P_LS', 'KIND': 'S', 'SIGN': 'I', 'OPTION': 'BT', 'LOW': '{{ source_sid }}CLNT{{ source_client }}', 'HIGH': '{{ sid }}CLNT{{ client }}'},
+           {'SELNAME': 'P_TAB', 'KIND': 'S', 'SIGN': 'I', 'OPTION': 'CP', 'LOW': '*'},
+           {'SELNAME': 'P_CNT', 'KIND': 'P', 'LOW': '{{ P_CNT | default(10000.000) }}'},
+           {'SELNAME': 'P_JOB_TN', 'KIND': 'P', 'LOW': 'X'},
+           {'SELNAME': 'P_ADATE', 'KIND': 'P', 'LOW': '180'},
+           {'SELNAME': 'P_PROC', 'KIND': 'P', 'LOW': '{{ P_PROC | default(5) }}'},
+           {'SELNAME': 'P_REL', 'KIND': 'P', 'LOW': 'X'}]
+
+text = [{'MANDT': '{{ client }}', 'LANGU': 'EN', 'REPORT': report, 'VARIANT': variant_name, 'VTEXT': 'Change logical system name'}]
+
+screen = [{'DYNNR': '1000', 'KIND': 'P'}]
+

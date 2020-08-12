@@ -1,3 +1,41 @@
 ---
- - hosts: sap
-   - role: backup_restore
+ - hosts: all
+   vars:
+      config_file_path: "{{ lookup('env','HOME') }}/system_refresh/{{ target_sap_sid }}/.config/sap_config.ini"
+      ansible_user: "{{ lookup('ini', 'remote_ssh_user section=SAP file={{ config_file_path }} ') | lower }}"
+   roles:
+     - role: stop_sap
+
+ - hosts: all
+   vars:
+     working_dir: "{{ lookup('env','HOME') }}/system_refresh/{{ target_sap_sid }}"
+     config_file_path: "{{ working_dir }}/.config/sap_config.ini"
+     ansible_connection: local
+     ansible_python_interpreter: /usr/bin/python3
+   roles:
+     - role: db_restore
+       vars:
+         remote_user: "{{ lookup('ini', 'remote_ssh_user section=SAP file={{ config_file_path }} ') | lower }}"
+         ashost: "{{ lookup('ini', 'ashost section=SAP file={{ config_file_path }} ') }}"
+         sysnr: "{{ lookup('ini', 'sysnr section=SAP file={{ config_file_path }} ') }}"
+         db_sysnr: "{{ lookup('ini', 'db_sysnr section=SAP file={{ config_file_path }} ') }}"
+         db_sid: "{{ lookup('ini', 'db_sid section=SAP file={{ config_file_path }} ') }}"
+         source_db_systemuser_passwd: "{{ lookup('ini', 'source_db_systemuser_passwd section=SAP file={{ config_file_path }} ') }}"
+         db_hostname: "{{ lookup('ini', 'db_hostname section=SAP file={{ config_file_path }} ') }}"
+         source_schema_passwd: "{{ lookup('ini', 'source_schema_passwd section=SAP file={{ config_file_path }} ') }}"
+
+ - hosts: all
+   vars:
+      config_file_path: "{{ lookup('env','HOME') }}/system_refresh/{{ target_sap_sid }}/.config/sap_config.ini"
+      ansible_user: "{{ lookup('ini', 'remote_ssh_user section=SAP file={{ config_file_path }} ') | lower }}"
+   roles:
+     - role: start_sap
+       vars:
+         ashost: "{{ lookup('ini', 'ashost section=SAP file={{ config_file_path }} ') }}"
+         sysnr: "{{ lookup('ini', 'sysnr section=SAP file={{ config_file_path }} ') }}"
+         db_sysnr: "{{ lookup('ini', 'db_sysnr section=SAP file={{ config_file_path }} ') }}"
+         db_sid: "{{ lookup('ini', 'db_sid section=SAP file={{ config_file_path }} ') }}"
+         source_db_systemuser_passwd: "{{ lookup('ini', 'source_db_systemuser_passwd section=SAP file={{ config_file_path }} ') }}"
+         db_hostname: "{{ lookup('ini', 'db_hostname section=SAP file={{ config_file_path }} ') }}"
+         source_schema_passwd: "{{ lookup('ini', 'source_schema_passwd section=SAP file={{ config_file_path }} ') }}"
+

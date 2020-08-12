@@ -1,0 +1,78 @@
+---
+# tasks file for user_master_export
+
+ - name: Fetch pc3_val and ctc_val
+   sap_function_call:
+     FETCH: sys_params
+   register: sys_params
+
+ - debug: var=sys_params.meta.stdout
+
+ - name: Copy Variables templates containing variant details
+   template:
+        src: variant_data.py.j2
+        dest: "{{ playbook_dir }}/module_utils/variant_data.py"
+        force: yes
+   vars:
+     client: "{{ sys_params.meta.stdout.client }}"
+     sid_ctc_val: "{{ sys_params.meta.stdout.sid_ctc_val }}"
+     trans_val: "{{ sys_params.meta.stdout.trans_val }}"
+
+ - name: Check Variant
+   variant:
+       report: "{{ report }}"
+       variant_name: "{{ variant_name }}"
+       action: check
+   register: var_check
+
+ - name: Delete Variant if already exists
+   variant:
+       report: "{{ report }}"
+       variant_name: "{{ variant_name }}"
+       action: delete
+   when: var_check.meta.stdout == True
+
+ - name: Create Variant
+   variant:
+       report: "{{ report }}"
+       variant_name: "{{ variant_name }}"
+       action: create
+   register: var_create
+
+ - name: User Master export
+   sap_function_call:
+     SUBST_START_REPORT_IN_BATCH:
+         IV_JOBNAME: "{{ report }}"
+         IV_REPNAME: "{{ report }}"
+         IV_VARNAME: "{{ variant_name }}"
+   register: user_master_export
+   when: var_create.meta.stdout == True
+
+ - debug: var=user_master_export
+
+ - name: Waiting for user master export to complete
+   pause:
+     seconds: 60
+
+ - name: Delete Variant
+   variant:
+       report: "{{ report }}"
+       variant_name: "{{ variant_name }}"
+       action: delete
+
+ - name: Fetch transport number of user master export
+   sap_function_call:
+     FETCH: sys_params
+   register: sys_params
+   tags: ctc
+
+ - debug: var=sys_params
+
+ - name: Storing transport number
+   template:
+     src: transport_number
+     dest: "{{ playbook_dir }}/../../transport_number"
+     force: yes
+     backup: yes
+   vars:
+     TRANSPORT_NUMBER: "{{ sys_params.meta.stdout.UME_Trans_No }}"

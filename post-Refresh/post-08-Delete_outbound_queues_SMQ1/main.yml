@@ -1,0 +1,12 @@
+---
+ - hosts: all
+   vars:
+     ansible_connection: local
+     ansible_python_interpreter: /usr/bin/python3
+   roles:
+     - role: del_SMQ1
+       vars:
+         report: "RSTRFCQD"
+         variant_name: "SST_DELSMQ1"
+         config_file_path: "{{ ansible_env.HOME }}/system_refresh/{{ target_sap_sid }}/.config/sap_config.ini"
+

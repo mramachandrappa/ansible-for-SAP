@@ -1,0 +1,14 @@
+- hosts: all
+  vars:
+     ansible_connection: local
+     ansible_python_interpreter: /usr/bin/python3
+  roles:
+    - role: logical_system_conversion
+      vars:
+        report: "STC_SC_UI_BDLS"
+        variant_name: "Z_PRDTOQA"
+        config_file_path: "{{ ansible_env.HOME }}/system_refresh/{{ target_sap_sid }}/.config/sap_config.ini"
+        source_client: "{{ lookup('ini', 'source_sap_client section=SAP file={{ config_file_path }}') }}"
+        source_sid: "{{ lookup('ini', 'source_sap_sid section=SAP file={{ config_file_path }}') }}"
+        client: "{{ lookup('ini', 'client section=SAP file={{ config_file_path }}') }}"
+        sid: "{{ lookup('ini', 'sid section=SAP file={{ config_file_path }}') }}"

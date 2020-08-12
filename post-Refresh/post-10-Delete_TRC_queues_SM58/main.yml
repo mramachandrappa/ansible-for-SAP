@@ -1,0 +1,13 @@
+---
+ - hosts: all
+   vars:
+     ansible_connection: local
+     ansible_python_interpreter: /usr/bin/python3
+   roles:
+     - role: del_TRC_queues_SM58
+       vars:
+         report: "RSARFCDL"
+         variant_name: "SST_DELSM58"
+         config_file_path: "{{ ansible_env.HOME }}/system_refresh/{{ target_sap_sid }}/.config/sap_config.ini"
+
+

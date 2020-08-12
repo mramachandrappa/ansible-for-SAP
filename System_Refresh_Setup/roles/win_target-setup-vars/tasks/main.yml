@@ -1,0 +1,13 @@
+---
+# tasks file for target-setup-vars
+ - name: create .config directory $HOME/system_refresh/$SID/.config
+   win_file:
+     path: "{{ working_dir }}/.config"
+     state: directory
+     mode: '0755'
+
+ - name: Create configuration file sap_config.ini in $HOME/system_refresh/$SID/.config
+   win_template:
+     src: sap_config.ini
+     dest: "{{ config_file_path }}"
+     force: yes

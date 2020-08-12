@@ -1,0 +1,97 @@
+---
+# tasks file for custom_programs_import
+ - name: Fetch sys_params (client, sid, bin_path, trans_val, sid_ctc_val)
+   sap_function_call:
+     FETCH: sys_params
+   register: sys_params
+
+ - name: Insert Command to add the transport to buffer
+   sap_function_call:
+     ZSXPG_COMMAND_INSERT:
+       NAME: 'ZTP_ADDTOBUFFER'
+       OPSYSTEM: 'Linux'
+       OPCOMMAND: 'tp'
+       PARAMETERS: "addtobuffer {{ lookup('file', '{{ playbook_dir }}/../../transport_number') }} {{ sys_params.meta.stdout.sid_val }} u1248 pf={{ sys_params.meta.stdout.bin_path }}/TP_DOMAIN_{{ sys_params.meta.stdout.sid_val }}.PFL"
+   register: comm_insert
+
+ - debug: var=comm_insert
+
+ - name: Execute Command
+   sap_function_call:
+     SXPG_COMMAND_EXECUTE:
+       NAME: 'ZTP_ADDTOBUFFER'
+   register: comm_execute
+
+ - debug: var=comm_execute
+
+ - name: Insert Command to import the transport to system.
+   sap_function_call:
+     ZSXPG_COMMAND_INSERT:
+       NAME: 'ZTP_IMPORTTR'
+       OPSYSTEM: 'Linux'
+       OPCOMMAND: 'tp'
+       PARAMETERS: "import {{ lookup('file', '{{ playbook_dir }}/../../transport_number') }} {{ sys_params.meta.stdout.sid_val }} CLIENT={{ sys_params.meta.stdout.client }} u1248 pf={{ sys_params.meta.stdout.bin_path }}/TP_DOMAIN_{{ sys_params.meta.stdout.sid_val }}.PFL"
+   register: comm_insert
+
+ - debug: var=comm_insert
+
+ - name: Execute Command
+   sap_function_call:
+     SXPG_COMMAND_EXECUTE:
+       NAME: 'ZTP_IMPORTTR'
+   register: comm_execute
+
+ - debug: var=comm_execute
+
+ - name: Copy Variables templates containing variant details
+   template:
+        src: variant_data.py.j2
+        dest: "{{ playbook_dir }}/module_utils/variant_data.py"
+        force: yes
+   vars:
+     client: "{{ sys_params.meta.stdout.client }}"
+     sid_ctc_val: "{{ sys_params.meta.stdout.sid_ctc_val }}"
+     UME_Trans_No: "{{ playbook_dir }}/../../transport_number"
+   tags: ctc
+
+ - name: Check Variant
+   variant:
+       report: "{{ report }}"
+       variant_name: "{{ variant_name }}"
+       action: check
+   register: var_check
+
+ - name: Delete Variant if already exists
+   variant:
+       report: "{{ report }}"
+       variant_name: "{{ variant_name }}"
+       action: delete
+   when: var_check.meta.stdout == True
+
+ - name: Create Variant
+   variant:
+       report: "{{ report }}"
+       variant_name: "{{ variant_name }}"
+       action: create
+   register: var_create
+
+ - name: User Master export
+   sap_function_call:
+     SUBST_START_REPORT_IN_BATCH:
+         IV_JOBNAME: "{{ report }}"
+         IV_REPNAME: "{{ report }}"
+         IV_VARNAME: "{{ variant_name }}"
+   register: user_master_export
+   when: var_create.meta.stdout == True
+
+ - debug: var=user_master_export
+
+ - name: Waiting for user master export to complete
+   pause:
+     seconds: 10
+
+ - name: Delete Variant
+   variant:
+       report: "{{ report }}"
+       variant_name: "{{ variant_name }}"
+       action: delete

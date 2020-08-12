@@ -1,0 +1,29 @@
+---
+# tasks file for copy_imp_ctl
+  - name: copy import.ctl file
+    win_template:
+      src: import.ctl
+      dest: "{{ ansible_env.TEMP }}\import.ctl"
+      group: sapsys
+      owner: "{{ lookup('ini', 'sid section=SAP file={{ config_file_path }}')|lower }}adm"
+      force: yes
+    become: yes
+
+  - name: Insert Command 'ZTABIMP'
+    sap_function_call:
+      ZSXPG_COMMAND_INSERT:
+        NAME: 'ZTABIMP'
+        OPSYSTEM: 'Linux'
+        OPCOMMAND: 'R3trans'
+        PARAMETERS: "-w {{ ansible_env.TEMP }}\import_ecc.log {{ ansible_env.TEMP }}\import.ctl"
+    register: comm_insert
+
+  - debug: var=comm_insert
+
+  - name: Execute Command 'ZTABEXP'
+    sap_function_call:
+      SXPG_COMMAND_EXECUTE:
+        NAME: "ZTABEXP"
+    register: comm_execute
+
+  - debug: var=comm_execute

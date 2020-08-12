@@ -1,0 +1,27 @@
+#!/usr/bin/python
+
+report = "{{ report }}"
+variant_name = "{{ variant_name }}"
+client = "{{ lookup('ini', 'client section=SAP file={{ config_file_path }}') }}"
+
+desc = dict(
+    MANDT=client,
+    REPORT=report,
+    VARIANT=variant_name
+)
+
+content = [{'SELNAME': 'JOBNAME', 'KIND': 'P', 'LOW': '*'},
+           {'SELNAME': 'USERNAME', 'KIND': 'P', 'LOW': '*'},
+           {'SELNAME': 'FRM_DATE', 'KIND': 'P', 'LOW': ''},
+           {'SELNAME': 'FRM_TIME', 'KIND': 'P', 'LOW': ''},
+           {'SELNAME': 'TO_DATE', 'KIND': 'P', 'LOW': ''},
+           {'SELNAME': 'TO_TIME', 'KIND': 'P', 'LOW': ''},
+           {'SELNAME': 'ENDDATE', 'KIND': 'P', 'LOW': ''},
+           {'SELNAME': 'ENDTIME', 'KIND': 'P', 'LOW': ''},
+           {'SELNAME': 'FIN', 'KIND': 'P', 'LOW': 'X'},
+           {'SELNAME': 'ABORT', 'KIND': 'P', 'LOW': 'X'},
+           {'SELNAME': 'FORCE', 'KIND': 'P', 'LOW': 'X'}]
+
+text = [{'MANDT': client, 'LANGU': 'EN', 'REPORT': report, 'VARIANT':variant_name, 'VTEXT': 'Delete background jobs logs'}]
+
+screen = [{'DYNNR': '1000', 'KIND': 'P'}]

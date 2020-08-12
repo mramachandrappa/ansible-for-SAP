@@ -1,0 +1,59 @@
+---
+# tasks file for db_config
+  - name: Create scripts directory under working_dir
+    file:
+      path: "{{ working_dir }}/scripts"
+      state: directory
+      mode: '0755'
+
+  - name: copy systemdb_restore.sh
+    template:
+      src: systemdb_restore.sh
+      dest: "{{ working_dir }}/scripts/"
+      force: yes
+      mode: u=rwx,g=rx,o=rx
+    become: yes
+
+  - name: copy tenantdb_restore.sh
+    template:
+      src: tenantdb_restore.sh
+      dest: "{{ working_dir }}/scripts/"
+      force: yes
+      mode: u=rwx,g=rx,o=rx
+    become: yes
+
+  - name: copy stop_db.sh
+    template:
+      src: stop_db.sh
+      dest: "{{ working_dir }}/scripts/"
+      force: yes
+      mode: u=rwx,g=rx,o=rx
+    become: yes
+
+  - name: copy user.sql
+    template:
+      src: user.sql
+      dest: "{{ working_dir }}/scripts/"
+      force: yes
+      mode: u=rwx,g=rx,o=rx
+    become: yes
+
+  - name: copy user_sql.sh
+    template:
+      src: user_sql.sh
+      dest: "{{ working_dir }}/scripts/"
+      force: yes
+      mode: u=rwx,g=rx,o=rx
+    become: yes
+
+  - name: copy main_db.sh
+    template:
+      src: main_db.sh
+      dest: "{{ working_dir }}/scripts/"
+      force: yes
+      mode: u=rwx,g=rx,o=rx
+    become: yes
+
+  - name: Run main_db.sh
+    command: "{{ working_dir }}/scripts/main_db.sh"
+
