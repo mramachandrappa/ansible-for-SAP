@@ -7,7 +7,7 @@
      - role: setup-vars
        vars:
          target_sap_user: "MRAM"
-         target_sap_passwd: "Sap@123"
+         target_sap_passwd: ""
          target_sap_hostname: "sstsap06"
          target_sap_sysnr: "01"
          target_sap_sid: "PC3"
